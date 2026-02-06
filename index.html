@@ -19,7 +19,7 @@
       --muted:#6b7280;
       --yes:#16a34a;
     }
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
     body{
       margin:0;
       min-height:100vh;
@@ -36,7 +36,7 @@
       overflow:hidden;
     }
 
-    /* Raining hearts layer */
+    /* Raining hearts */
     .rain{
       position:fixed;
       inset:0;
@@ -46,7 +46,7 @@
     }
     .drop{
       position:absolute;
-      top:-10vh;
+      top:-12vh;
       font-size:18px;
       opacity:.75;
       animation: fall linear infinite;
@@ -59,8 +59,33 @@
       to{ transform: translate3d(0,112vh,0); }
     }
 
+    /* Confetti */
+    .confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:9999;
+      overflow:hidden;
+      display:none;
+    }
+    .confetti.active{ display:block; }
+    .conf{
+      position:absolute;
+      top:-10vh;
+      font-size:18px;
+      animation: confFall linear forwards;
+      opacity:.95;
+      transform: translate3d(0,0,0);
+      will-change: transform;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
+    }
+    @keyframes confFall{
+      from{ transform: translate3d(0,-14vh,0) rotate(0deg); }
+      to{ transform: translate3d(0,120vh,0) rotate(360deg); }
+    }
+
     .card{
-      width:min(720px, 100%);
+      width:min(760px, 100%);
       background:var(--card);
       border-radius:28px;
       box-shadow:0 30px 80px rgba(0,0,0,.25);
@@ -72,6 +97,7 @@
     h1{
       margin:8px 0 6px;
       font-size:clamp(30px,4vw,44px);
+      letter-spacing:-.03em;
     }
     p{
       margin:0 0 18px;
@@ -85,17 +111,35 @@
       background:#fff;
       padding:22px;
       border:1px solid #e5e7eb;
-      min-height:240px;
+      min-height:270px;
       position:relative;
       overflow:hidden;
     }
+
+    .screen{ display:none; }
+    .screen.active{ display:block; }
+
+    .big{
+      font-size:clamp(22px,3vw,34px);
+      font-weight:900;
+      margin:0 0 10px;
+      letter-spacing:-.02em;
+      color:#111827;
+    }
+    .tiny{
+      margin-top:12px;
+      font-size:13px;
+      color:#6b7280;
+      line-height:1.4;
+    }
+
     .buttons{
       display:flex;
       gap:14px;
       flex-wrap:wrap;
       align-items:center;
       position:relative;
-      min-height:70px;
+      min-height:74px;
     }
     button{
       border:0;
@@ -106,7 +150,7 @@
       cursor:pointer;
       user-select:none;
       touch-action: manipulation;
-      transform-origin: center;
+      transform-origin:center;
     }
     .yes{
       background:var(--yes);
@@ -118,24 +162,7 @@
       background:#f3f4f6;
       border:1px solid #e5e7eb;
       position:relative;
-    }
-
-    .screen{display:none}
-    .screen.active{display:block}
-
-    .big{
-      font-size:clamp(22px,3vw,34px);
-      font-weight:900;
-      margin:0 0 10px;
-      letter-spacing:-.02em;
-    }
-    .egg{
-      font-size:52px;
-      position:fixed;
-      cursor:pointer;
-      user-select:none;
-      z-index:9999;
-      transition: left 0.12s ease, top 0.12s ease;
+      color:#111827;
     }
     .pill{
       display:inline-block;
@@ -148,10 +175,96 @@
       font-weight:800;
       font-size:14px;
     }
-    .tiny{
-      margin-top:12px;
-      font-size:13px;
+
+    /* Loading overlay */
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:10000;
+      background: rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+      padding:24px;
+    }
+    .overlay.hidden{ display:none; }
+    .overlayCard{
+      width:min(520px, 100%);
+      background:#ffffffee;
+      border:1px solid #ffffffaa;
+      border-radius:22px;
+      box-shadow:0 30px 80px rgba(0,0,0,.18);
+      padding:22px;
+      text-align:center;
+    }
+    .spinner{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      border:5px solid rgba(0,0,0,.12);
+      border-top-color: rgba(0,0,0,.55);
+      margin:0 auto 14px;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+    .overlayTitle{
+      font-weight:900;
+      font-size:18px;
+      margin:0 0 6px;
+      color:#111827;
+      letter-spacing:-.01em;
+    }
+    .overlayText{
+      margin:0;
       color:#6b7280;
+      font-size:14px;
+      line-height:1.35;
+    }
+
+    /* Date menu */
+    .menu{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+    .choice{
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      border-radius:18px;
+      padding:14px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .08s ease, background .15s ease;
+      text-align:left;
+    }
+    .choice:active{ transform: scale(.98); }
+    .choice strong{
+      display:block;
+      font-size:14px;
+      color:#111827;
+      margin-bottom:6px;
+    }
+    .choice span{
+      display:block;
+      font-size:12px;
+      color:#6b7280;
+      line-height:1.25;
+    }
+    @media (max-width: 520px){
+      .menu{ grid-template-columns: 1fr; }
+    }
+
+    /* Egg */
+    .egg{
+      font-size:52px;
+      position:fixed;
+      cursor:pointer;
+      user-select:none;
+      z-index:9998;
+      transition: left 0.12s ease, top 0.12s ease;
+      display:none;
     }
   </style>
 </head>
@@ -159,17 +272,26 @@
 <body>
 
 <div class="rain" id="rain"></div>
+<div class="confetti" id="confetti"></div>
+
+<div class="overlay" id="overlay">
+  <div class="overlayCard">
+    <div class="spinner"></div>
+    <p class="overlayTitle" id="overlayTitle">Verifying Zozo’s answer…</p>
+    <p class="overlayText" id="overlayText">Please wait. Bean level check in progress.</p>
+  </div>
+</div>
 
 <div class="card">
   <h1 id="headline">Hey Zozo 💘</h1>
-  <p>Hi. It’s me. The guy who would rather code a website than risk fumbling in person.</p>
+  <p id="subline">Hi. It’s me. The guy who buys you food, gives you cuddles, and is pretty cool.</p>
 
   <div class="stage">
     <!-- Screen 1 -->
-    <div class="screen active" id="screen1">
+    <div class="screen" id="screen1">
       <p class="big">Will you be my Valentine, Bean?</p>
 
-      <div class="buttons" id="btnZone">
+      <div class="buttons">
         <button class="yes" id="yesBtn">Yes 💖</button>
         <button class="no" id="noBtn">No 😅</button>
       </div>
@@ -185,11 +307,29 @@
       <div class="tiny">Tap it. If you can.</div>
     </div>
 
-    <!-- Screen 3 -->
+    <!-- Screen 3: Date menu -->
     <div class="screen" id="screen3">
-      <p class="big">Yessss. My heart just did a backflip 😭💞</p>
-      <p>Cool. Picked you up at 7 😌 Wear something cute. I’ll be the one staring respectfully.</p>
-      <div class="pill">Screenshot this and send it to me</div>
+      <p class="big">You said yes 😭💞</p>
+      <p>That means it’s a promise of a whole lot of happiness, food, and fun.</p>
+      <p><strong>Choose our Valentine vibe:</strong></p>
+
+      <div class="menu" id="menu">
+        <div class="choice" data-choice="Sushi night 🍣">
+          <strong>Sushi night 🍣</strong>
+          <span>Fancy, cute, we pretend we’re classy.</span>
+        </div>
+        <div class="choice" data-choice="Pizza date 🍕">
+          <strong>Pizza date 🍕</strong>
+          <span>Maximum comfort, maximum joy.</span>
+        </div>
+        <div class="choice" data-choice="Ice cream mission 🍦">
+          <strong>Ice cream mission 🍦</strong>
+          <span>Sweet, chaotic, and we share bites.</span>
+        </div>
+      </div>
+
+      <div class="pill" id="picked" style="display:none; margin-top:14px;"></div>
+      <div class="tiny" id="pickedHint" style="display:none;">Screenshot this and send it to me 😌</div>
     </div>
   </div>
 </div>
@@ -197,15 +337,33 @@
 <div class="egg" id="egg">🍆</div>
 
 <script>
-  // Reveal tab title only after open
-  setTimeout(() => { document.title = "Zozo, Bean, Zo 💘"; }, 600);
+  // Reveal tab title after open
+  setTimeout(() => { document.title = "Zozo, Bean, Zo 💘"; }, 650);
 
-  // Name via URL: ?name=Zozo or ?name=Zo
+  // Personalise name via URL: ?name=Zozo or ?name=Zo
   const params = new URLSearchParams(location.search);
   const name = params.get("name");
   if (name) document.getElementById("headline").textContent = `Hey ${name} 💘`;
 
-  // Raining hearts for mobile + desktop
+  // Loading overlay, then show screen 1
+  const overlay = document.getElementById("overlay");
+  const screen1 = document.getElementById("screen1");
+  const screen2 = document.getElementById("screen2");
+  const screen3 = document.getElementById("screen3");
+
+  function showScreen(n){
+    screen1.classList.remove("active");
+    screen2.classList.remove("active");
+    screen3.classList.remove("active");
+    document.getElementById("screen" + n).classList.add("active");
+  }
+
+  setTimeout(() => {
+    overlay.classList.add("hidden");
+    showScreen(1);
+  }, 1500);
+
+  // Raining hearts for phone + desktop
   const rain = document.getElementById("rain");
   const hearts = ["💗","💖","💘","💞","💕","❤️","💓","💝"];
   const isReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -216,8 +374,8 @@
     d.textContent = hearts[Math.floor(Math.random() * hearts.length)];
     const left = Math.random() * 100;
     const size = 14 + Math.random() * 20;
-    const dur = 4.5 + Math.random() * 6.5;
-    const delay = Math.random() * 1.2;
+    const dur = 4.8 + Math.random() * 7.2;
+    const delay = Math.random() * 1.4;
 
     d.style.left = left + "vw";
     d.style.fontSize = size + "px";
@@ -226,90 +384,117 @@
     d.style.opacity = (0.35 + Math.random() * 0.55).toFixed(2);
 
     rain.appendChild(d);
-    setTimeout(() => d.remove(), (dur + delay) * 1000 + 200);
+    setTimeout(() => d.remove(), (dur + delay) * 1000 + 250);
   }
 
   if (!isReduced){
-    const density = window.innerWidth < 520 ? 320 : 220; // slower on phones
-    for (let i = 0; i < 18; i++) addDrop();
+    const density = window.innerWidth < 520 ? 280 : 190;
+    for (let i = 0; i < 22; i++) addDrop();
     setInterval(addDrop, density);
   }
 
-  // Screens
+  // Confetti burst
+  const confetti = document.getElementById("confetti");
+  const confChars = ["💖","💘","✨","🎉","💗","💕","❤️","🌸","⭐"];
+  function burstConfetti(){
+    confetti.classList.add("active");
+    const count = window.innerWidth < 520 ? 26 : 40;
+
+    for (let i = 0; i < count; i++){
+      const c = document.createElement("div");
+      c.className = "conf";
+      c.textContent = confChars[Math.floor(Math.random() * confChars.length)];
+
+      const left = Math.random() * 100;
+      const size = 14 + Math.random() * 24;
+      const dur = 2.8 + Math.random() * 1.6;
+
+      c.style.left = left + "vw";
+      c.style.fontSize = size + "px";
+      c.style.animationDuration = dur + "s";
+      c.style.opacity = (0.65 + Math.random() * 0.35).toFixed(2);
+
+      confetti.appendChild(c);
+      setTimeout(() => c.remove(), (dur * 1000) + 200);
+    }
+
+    setTimeout(() => confetti.classList.remove("active"), 3400);
+  }
+
+  // Buttons
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const egg = document.getElementById("egg");
 
-  const screen1 = document.getElementById("screen1");
-  const screen2 = document.getElementById("screen2");
-  const screen3 = document.getElementById("screen3");
-
-  egg.style.display = "none";
-
-  function showScreen(n){
-    screen1.classList.remove("active");
-    screen2.classList.remove("active");
-    screen3.classList.remove("active");
-    document.getElementById("screen" + n).classList.add("active");
-  }
-
   // YES grows as she chases NO
   let yesScale = 1;
   function growYes(){
-    yesScale = Math.min(2.1, yesScale + 0.10);
+    yesScale = Math.min(2.6, yesScale + 0.10);
     yesBtn.style.transform = `scale(${yesScale})`;
-    yesBtn.style.boxShadow = `0 18px 44px rgba(22,163,74,${Math.min(0.65, 0.25 + yesScale/6)})`;
+    yesBtn.style.boxShadow = `0 18px 44px rgba(22,163,74,${Math.min(0.75, 0.25 + yesScale/6)})`;
   }
 
-  // Make NO impossible, but never disappear
-  function moveNo(){
+  // NO jitter zone, stays near home, nearly impossible
+  let noHome = null;
+  function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+  function setNoHomeIfNeeded(){
+    if (noHome) return;
+    const r = noBtn.getBoundingClientRect();
+    noHome = { cx: r.left + r.width/2, cy: r.top + r.height/2, w: r.width, h: r.height };
+  }
+  function jitterNo(){
+    setNoHomeIfNeeded();
+
     const pad = 10;
+    const zoneRadiusX = Math.max(120, Math.min(240, window.innerWidth * 0.24));
+    const zoneRadiusY = Math.max(95,  Math.min(190, window.innerHeight * 0.18));
 
-    // Keep it inside the viewport
-    const w = noBtn.offsetWidth || 120;
-    const h = noBtn.offsetHeight || 52;
+    const rx = (Math.random() * 2 - 1) * zoneRadiusX;
+    const ry = (Math.random() * 2 - 1) * zoneRadiusY;
 
-    const maxX = Math.max(pad, window.innerWidth - w - pad);
-    const maxY = Math.max(pad, window.innerHeight - h - pad);
+    const x = noHome.cx + rx - noHome.w/2;
+    const y = noHome.cy + ry - noHome.h/2;
 
-    const x = Math.random() * (maxX - pad) + pad;
-    const y = Math.random() * (maxY - pad) + pad;
+    const maxX = window.innerWidth - noHome.w - pad;
+    const maxY = window.innerHeight - noHome.h - pad;
 
     noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-    noBtn.style.zIndex = "9998";
+    noBtn.style.left = clamp(x, pad, maxX) + "px";
+    noBtn.style.top = clamp(y, pad, maxY) + "px";
+    noBtn.style.zIndex = "9997";
 
     growYes();
   }
+  window.addEventListener("resize", () => { noHome = null; });
 
-  // Desktop: hover moves it
-  noBtn.addEventListener("mouseenter", moveNo);
+  // Desktop, cursor near NO triggers jitter
+  noBtn.addEventListener("mouseenter", jitterNo);
+  document.addEventListener("mousemove", (e) => {
+    if (!screen1.classList.contains("active")) return;
+    setNoHomeIfNeeded();
+    const r = noBtn.getBoundingClientRect();
+    const cx = r.left + r.width/2;
+    const cy = r.top + r.height/2;
+    const dx = Math.abs(e.clientX - cx);
+    const dy = Math.abs(e.clientY - cy);
+    if (dx < 150 && dy < 120) jitterNo();
+  });
 
-  // Mobile: touching it moves it before click registers
-  noBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    moveNo();
-  }, { passive:false });
-
-  // Also panic if finger gets near the NO button
-  document.addEventListener("touchstart", (e)=>{
+  // Mobile, touching near NO triggers jitter
+  noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); jitterNo(); }, { passive:false });
+  document.addEventListener("touchstart", (e) => {
     if (!screen1.classList.contains("active")) return;
     const r = noBtn.getBoundingClientRect();
     const t = e.touches[0];
     const dx = Math.abs(t.clientX - (r.left + r.width/2));
     const dy = Math.abs(t.clientY - (r.top + r.height/2));
-    if (dx < 140 && dy < 110) moveNo();
+    if (dx < 165 && dy < 135) jitterNo();
   }, { passive:true });
 
-  // Just in case they manage to click NO
-  noBtn.addEventListener("click", (e)=>{
-    e.preventDefault();
-    moveNo();
-  });
+  noBtn.addEventListener("click", (e)=>{ e.preventDefault(); jitterNo(); });
 
   // YES click goes to egg game
-  yesBtn.addEventListener("click", ()=>{
+  yesBtn.addEventListener("click", () => {
     showScreen(2);
     egg.style.display = "block";
     moveEgg();
@@ -322,23 +507,33 @@
     const h = 60;
     const maxX = Math.max(pad, window.innerWidth - w - pad);
     const maxY = Math.max(pad, window.innerHeight - h - pad);
-
     const x = Math.random() * (maxX - pad) + pad;
     const y = Math.random() * (maxY - pad) + pad;
-
     egg.style.left = x + "px";
     egg.style.top = y + "px";
   }
 
   egg.addEventListener("mouseenter", moveEgg);
-  egg.addEventListener("touchstart", (e)=>{
-    e.preventDefault();
-    moveEgg();
-  }, { passive:false });
+  egg.addEventListener("touchstart", (e)=>{ e.preventDefault(); moveEgg(); }, { passive:false });
 
-  egg.addEventListener("click", ()=>{
+  egg.addEventListener("click", () => {
     egg.style.display = "none";
+    burstConfetti();
     showScreen(3);
+  });
+
+  // Date menu selection
+  const picked = document.getElementById("picked");
+  const pickedHint = document.getElementById("pickedHint");
+  document.getElementById("menu").addEventListener("click", (e) => {
+    const card = e.target.closest(".choice");
+    if (!card) return;
+
+    const choice = card.getAttribute("data-choice") || "A cute date";
+    picked.style.display = "inline-block";
+    pickedHint.style.display = "block";
+    picked.textContent = `Locked in: ${choice}. Pick up at 7 😌`;
+    burstConfetti();
   });
 </script>
 

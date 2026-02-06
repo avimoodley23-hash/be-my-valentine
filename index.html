@@ -45,7 +45,21 @@
       backdrop-filter: blur(10px);
       position:relative;
       z-index:1;
+      transition: padding .15s ease;
     }
+
+    .headerArea{
+      transition: opacity .12s ease, transform .12s ease, height .12s ease, margin .12s ease;
+    }
+    .card.minimal .headerArea{
+      opacity:0;
+      transform: translateY(-6px);
+      height:0;
+      margin:0;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
     h1{
       margin:8px 0 6px;
       font-size:clamp(30px,4vw,44px);
@@ -116,18 +130,6 @@
       color:#111827;
     }
 
-    .pill{
-      display:inline-block;
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:999px;
-      background:#ecfdf5;
-      border:1px solid #bbf7d0;
-      color:#065f46;
-      font-weight:800;
-      font-size:14px;
-    }
-
     /* Photo */
     .photoWrap{
       margin-top:14px;
@@ -173,29 +175,6 @@
       100%{ transform: scale(1.1) translateY(0); opacity:1; }
     }
 
-    /* Confetti */
-    .confetti{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:9999;
-      overflow:hidden;
-      display:none;
-    }
-    .confetti.active{ display:block; }
-    .conf{
-      position:absolute;
-      top:-10vh;
-      font-size:18px;
-      animation: confFall linear forwards;
-      opacity:.95;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
-    }
-    @keyframes confFall{
-      from{ transform: translate3d(0,-14vh,0) rotate(0deg); }
-      to{ transform: translate3d(0,120vh,0) rotate(360deg); }
-    }
-
     /* Egg */
     .egg{
       font-size:52px;
@@ -206,26 +185,6 @@
       transition: left 0.12s ease, top 0.12s ease;
       display:none;
     }
-
-    /* Toast */
-    .toast{
-      position:fixed;
-      left:50%;
-      top:18px;
-      transform: translateX(-50%);
-      z-index:10001;
-      background: rgba(17,24,39,.78);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.22);
-      border-radius:999px;
-      padding:10px 14px;
-      font-weight:800;
-      font-size:13px;
-      backdrop-filter: blur(8px);
-      display:none;
-      pointer-events:none;
-    }
-    .toast.show{ display:block; }
 
     /* Captcha overlay */
     .gate{
@@ -343,8 +302,6 @@
 <body>
 
 <div class="heartFlood" id="heartFlood"></div>
-<div class="confetti" id="confetti"></div>
-<div class="toast" id="toast">Maybe you will get it later too 😉</div>
 
 <!-- Captcha gate -->
 <div class="gate" id="gate">
@@ -372,9 +329,11 @@
   </div>
 </div>
 
-<div class="card">
-  <h1 id="headline">Hey Zozo 💘</h1>
-  <p>Hi. It’s me. The guy who buys you food, gives you cuddles, and is pretty cool.</p>
+<div class="card" id="card">
+  <div class="headerArea" id="headerArea">
+    <h1 id="headline">Hey Zozo 💘</h1>
+    <p>Hi. It’s me. The guy who buys you food, gives you cuddles, and is pretty cool.</p>
+  </div>
 
   <div class="stage">
     <div class="screen" id="screen1">
@@ -395,9 +354,9 @@
         <div class="caption">Us 🥹</div>
       </div>
 
-      <p style="margin-top:14px;"><strong>Now catch the eggplant 🍆</strong></p>
-      <div class="tiny">Attempts: <span id="eggAttempts">0</span> of 5</div>
-      <div class="tiny" id="eggReady" style="display:none;">Okay fine. You can catch it now 😭 Tap it.</div>
+      <p style="margin-top:14px;"><strong>Try catch the eggplant 🍆</strong></p>
+      <p style="margin-top:-8px; color:#6b7280;">If you can’t… you can get it later 😉</p>
+      <div class="tiny">Go on. Try 😌</div>
     </div>
 
     <div class="screen" id="screen3">
@@ -418,6 +377,7 @@
   if (name) document.getElementById("headline").textContent = `Hey ${name} 💘`;
 
   // Screens
+  const card = document.getElementById("card");
   const screen1 = document.getElementById("screen1");
   const screen2 = document.getElementById("screen2");
   const screen3 = document.getElementById("screen3");
@@ -427,9 +387,13 @@
     screen2.classList.remove("active");
     screen3.classList.remove("active");
     document.getElementById("screen" + n).classList.add("active");
+
+    // Hide header on screen 2+ (so it feels like a new page)
+    if (n >= 2) card.classList.add("minimal");
+    else card.classList.remove("minimal");
   }
 
-  // Captcha gate logic
+  // Captcha gate
   const gate = document.getElementById("gate");
   const robotRow = document.getElementById("robotRow");
   const robotBox = document.getElementById("robotBox");
@@ -446,11 +410,9 @@
     enterBtn.classList.remove("show");
 
     const items = [];
-    // Put more hearts than needed so it feels easy
     for (let i = 0; i < 6; i++) items.push("💖");
     for (let i = 0; i < 10; i++) items.push(["🍕","✨","🌸","🍣","😌","🍦"][Math.floor(Math.random()*6)]);
 
-    // Shuffle
     for (let i = items.length - 1; i > 0; i--){
       const j = Math.floor(Math.random() * (i + 1));
       [items[i], items[j]] = [items[j], items[i]];
@@ -513,33 +475,6 @@
     }, durationMs);
   }
 
-  // Confetti
-  const confetti = document.getElementById("confetti");
-  const confChars = ["💖","💘","✨","🎉","💗","💕","❤️","🌸","⭐"];
-  function burstConfetti(){
-    confetti.classList.add("active");
-    const count = window.innerWidth < 520 ? 26 : 38;
-
-    for (let i = 0; i < count; i++){
-      const c = document.createElement("div");
-      c.className = "conf";
-      c.textContent = confChars[Math.floor(Math.random() * confChars.length)];
-      c.style.left = (Math.random() * 100) + "vw";
-      c.style.fontSize = (14 + Math.random() * 22) + "px";
-      c.style.animationDuration = (2.6 + Math.random() * 1.6) + "s";
-      confetti.appendChild(c);
-      setTimeout(() => c.remove(), 4500);
-    }
-    setTimeout(() => confetti.classList.remove("active"), 3200);
-  }
-
-  // Toast
-  const toast = document.getElementById("toast");
-  function showToast(){
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 3200);
-  }
-
   // Buttons and egg
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
@@ -598,17 +533,7 @@
   }, { passive:true });
   noBtn.addEventListener("click", (e)=>{ e.preventDefault(); jitterNo(); });
 
-  // Egg attempts
-  let eggDodges = 0;
-  const maxDodges = 5;
-  const eggAttemptsEl = document.getElementById("eggAttempts");
-  const eggReadyEl = document.getElementById("eggReady");
-
-  function updateEggUI(){
-    eggAttemptsEl.textContent = String(eggDodges);
-    if (eggDodges >= maxDodges) eggReadyEl.style.display = "block";
-  }
-
+  // Egg is impossible: always dodges on hover, touch, or click
   function moveEgg(){
     const pad = 12;
     const w = 60;
@@ -618,41 +543,24 @@
     egg.style.left = (Math.random() * (maxX - pad) + pad) + "px";
     egg.style.top  = (Math.random() * (maxY - pad) + pad) + "px";
   }
-
-  function eggDodge(){
-    if (eggDodges < maxDodges){
-      eggDodges += 1;
-      updateEggUI();
-      moveEgg();
-    }
+  function evadeEgg(){
+    moveEgg();
   }
 
-  // YES click -> heart flood -> screen 2
+  // YES click -> heart flood -> screen 2 + show egg
   yesBtn.addEventListener("click", () => {
     floodHearts(950);
     setTimeout(() => {
       showScreen(2);
-      eggDodges = 0;
-      eggReadyEl.style.display = "none";
-      updateEggUI();
       egg.style.display = "block";
       moveEgg();
     }, 700);
   });
 
-  egg.addEventListener("mouseenter", eggDodge);
-  egg.addEventListener("touchstart", (e)=>{ e.preventDefault(); eggDodge(); }, { passive:false });
+  egg.addEventListener("mouseenter", evadeEgg);
+  egg.addEventListener("touchstart", (e)=>{ e.preventDefault(); evadeEgg(); }, { passive:false });
+  egg.addEventListener("click", (e)=>{ e.preventDefault(); evadeEgg(); });
 
-  egg.addEventListener("click", () => {
-    if (eggDodges < maxDodges){
-      eggDodge();
-      return;
-    }
-    egg.style.display = "none";
-    burstConfetti();
-    showToast();
-    showScreen(3);
-  });
 </script>
 
 </body>

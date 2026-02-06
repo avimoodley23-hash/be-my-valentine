@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Be My Valentine?</title>
+  <title>Zozo, Bean, Zo 💘</title>
 
-  <!-- Link preview for WhatsApp / iMessage -->
-  <meta property="og:title" content="Will you be my Valentine? 💖">
-  <meta property="og:description" content="I made you a website… please say yes.">
+  <!-- Link previews -->
+  <meta property="og:title" content="Zozo… quick question 💖">
+  <meta property="og:description" content="Open this and answer honestly. Bean. 😌">
   <meta property="og:type" content="website">
 
   <style>
@@ -52,7 +52,7 @@
       to{ transform: translateY(-15vh) rotate(18deg); }
     }
     .card{
-      width:min(680px, 100%);
+      width:min(720px, 100%);
       background:var(--card);
       border-radius:28px;
       box-shadow: 0 30px 80px rgba(0,0,0,.25);
@@ -60,14 +60,15 @@
       backdrop-filter: blur(10px);
     }
     h1{
-      margin:12px 0 6px;
-      font-size: clamp(32px, 4vw, 44px);
+      margin:8px 0 6px;
+      font-size: clamp(30px, 4vw, 44px);
       letter-spacing:-.03em;
     }
     p{
       margin:0 0 18px;
       color:var(--muted);
       font-size:16px;
+      line-height:1.45;
     }
     .stage{
       margin-top:10px;
@@ -75,24 +76,31 @@
       background:#fff;
       padding:22px;
       border:1px solid #e5e7eb;
+      position:relative;
+      overflow:hidden;
+      min-height: 210px;
     }
     .question{
-      font-size: clamp(22px, 3vw, 30px);
-      margin-bottom:16px;
+      font-size: clamp(20px, 3vw, 30px);
+      margin:0 0 14px;
+      letter-spacing:-.02em;
     }
     .buttons{
       display:flex;
       gap:14px;
       flex-wrap:wrap;
+      align-items:center;
     }
     button{
       border:0;
       border-radius:16px;
       padding:14px 20px;
       font-size:16px;
-      font-weight:700;
+      font-weight:800;
       cursor:pointer;
+      user-select:none;
     }
+    button:active{ transform: scale(.98); }
     .yes{
       background:var(--yes);
       color:white;
@@ -102,20 +110,30 @@
       background:#f3f4f6;
       border:1px solid #e5e7eb;
     }
-    .success{
-      display:none;
-      margin-top:16px;
-      padding:16px;
-      border-radius:16px;
+
+    .screen{ display:none; animation: fadeIn .25s ease; }
+    .screen.active{ display:block; }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    .big{
+      font-size: clamp(22px, 3.2vw, 34px);
+      font-weight:900;
+      margin:0 0 10px;
+      letter-spacing:-.02em;
+    }
+    .pill{
+      display:inline-block;
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:999px;
       background:#ecfdf5;
       border:1px solid #bbf7d0;
       color:#065f46;
-      font-weight:700;
-    }
-    .success small{
-      display:block;
-      margin-top:6px;
-      font-weight:600;
+      font-weight:800;
+      font-size:14px;
     }
     .footer{
       margin-top:14px;
@@ -123,7 +141,11 @@
       color:#6b7280;
       display:flex;
       justify-content:space-between;
+      flex-wrap:wrap;
+      gap:10px;
     }
+    a{ color:#374151; font-weight:800; text-decoration:none; }
+    a:hover{ text-decoration:underline; }
   </style>
 </head>
 <body>
@@ -131,72 +153,155 @@
 <div class="hearts" id="hearts"></div>
 
 <div class="card">
-  <h1>Hey <span id="herName">my love</span> 💘</h1>
-  <p>I made you a website because asking normally felt boring.</p>
+  <h1 id="headline">Hey Zozo 💘</h1>
+  <p id="subline">Hi. It’s me. The guy who would rather code a website than risk fumbling in person.</p>
 
   <div class="stage">
-    <div class="question">Will you be my Valentine?</div>
+    <!-- Screen 1 -->
+    <div class="screen active" id="screen1">
+      <div class="question" id="questionText">Will you be my Valentine, Bean?</div>
 
-    <div class="buttons">
-      <button class="yes" id="yesBtn">Yes 💖</button>
-      <button class="no" id="noBtn">No 😅</button>
+      <div class="buttons">
+        <button class="yes" id="yesBtn">Yes 💖</button>
+        <button class="no" id="noBtn">No 😅</button>
+      </div>
+
+      <p style="margin-top:14px" id="hint">There is no wrong answer. Except one. You know which one 😌</p>
     </div>
 
-    <div class="success" id="success">
-      It’s official 🎉💞
-      <small>Screenshot this and send it to me 😌</small>
+    <!-- Screen 2 -->
+    <div class="screen" id="screen2">
+      <div class="big" id="yesTitle">Yessss. My heart just did a backflip 😭💞</div>
+      <p id="yesBody">Cool. Picked you up at 7 😌 Wear something cute. I’ll be the one staring respectfully.</p>
+      <div class="pill" id="yesPill">Screenshot this and send it to me</div>
+
+      <div class="buttons" style="margin-top:16px">
+        <button class="yes" id="backBtn" style="background:#111827; box-shadow:none;">Back</button>
+        <button class="no" id="copyBtn">Copy link</button>
+      </div>
     </div>
   </div>
 
   <div class="footer">
-    <div>Made with love</div>
+    <div id="signature">Made for Zo, by Avi</div>
     <div><a href="#" id="reset">Reset</a></div>
   </div>
 </div>
 
 <script>
-  // Name from URL
+  // Cute custom copy in one place
+  const CONFIG = {
+    herNameFallback: "Zozo",
+    headline: (herName) => `Hey ${herName} 💘`,
+    subline: "Hi. It’s me. The guy who would rather code a website than risk fumbling in person.",
+    question: "Will you be my Valentine, Bean?",
+    hint: "There is no wrong answer. Except one. You know which one 😌",
+    yesTitle: "Yessss. My heart just did a backflip 😭💞",
+    yesBody: "Cool. Picked you up at 7 😌 Wear something cute. I’ll be the one staring respectfully.",
+    signature: "Made for Zo, by Avi"
+  };
+
+  // Name via URL: ?name=Zozo or ?name=Zo
   const params = new URLSearchParams(location.search);
-  const name = params.get("name");
-  if(name) document.getElementById("herName").textContent = name;
+  const herName = params.get("name") || CONFIG.herNameFallback;
+
+  document.getElementById("headline").textContent = CONFIG.headline(herName);
+  document.getElementById("subline").textContent = CONFIG.subline;
+  document.getElementById("questionText").textContent = CONFIG.question;
+  document.getElementById("hint").textContent = CONFIG.hint;
+  document.getElementById("yesTitle").textContent = CONFIG.yesTitle;
+  document.getElementById("yesBody").textContent = CONFIG.yesBody;
+  document.getElementById("signature").textContent = CONFIG.signature;
 
   // Floating hearts
   const hearts = document.getElementById("hearts");
-  const heartChars = ["💗","💖","💘","💞","💕","❤️"];
+  const heartChars = ["💗","💖","💘","💞","💕","❤️","💓","💝"];
   function spawnHeart(){
     const h = document.createElement("div");
     h.className = "heart";
     h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
     h.style.left = Math.random()*100 + "vw";
-    h.style.animationDuration = 6 + Math.random()*10 + "s";
+    h.style.animationDuration = (6 + Math.random()*10) + "s";
+    h.style.fontSize = (16 + Math.random()*18) + "px";
+    h.style.opacity = (0.25 + Math.random()*0.55).toFixed(2);
     hearts.appendChild(h);
-    setTimeout(()=>h.remove(),12000);
+    setTimeout(()=>h.remove(), 13000);
   }
-  for(let i=0;i<15;i++) spawnHeart();
-  setInterval(spawnHeart,700);
+  for(let i=0;i<18;i++) spawnHeart();
+  setInterval(spawnHeart, 620);
+
+  // Screen switching
+  const screen1 = document.getElementById("screen1");
+  const screen2 = document.getElementById("screen2");
+  const show = (id) => {
+    screen1.classList.remove("active");
+    screen2.classList.remove("active");
+    document.getElementById(id).classList.add("active");
+  };
 
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
-  const success = document.getElementById("success");
 
-  noBtn.addEventListener("mouseenter", ()=>{
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 60);
+  yesBtn.addEventListener("click", ()=> show("screen2"));
+  document.getElementById("backBtn").addEventListener("click", ()=> show("screen1"));
+
+  // Copy link button
+  document.getElementById("copyBtn").addEventListener("click", async ()=>{
+    try{
+      await navigator.clipboard.writeText(location.href);
+      const btn = document.getElementById("copyBtn");
+      btn.textContent = "Copied 😌";
+      setTimeout(()=> btn.textContent = "Copy link", 1400);
+    }catch(e){
+      alert("Copy failed, just copy the URL from the address bar.");
+    }
+  });
+
+  // Reset
+  document.getElementById("reset").addEventListener("click", (e)=>{
+    e.preventDefault();
+    show("screen1");
+    noBtn.style.position = "relative";
+    noBtn.style.left = "auto";
+    noBtn.style.top = "auto";
+  });
+
+  // Make No flee harder, including on mobile
+  function moveNoButton(){
+    const pad = 10;
+    const btnW = noBtn.offsetWidth || 120;
+    const btnH = noBtn.offsetHeight || 52;
+
+    const maxX = Math.max(pad, window.innerWidth - btnW - pad);
+    const maxY = Math.max(pad, window.innerHeight - btnH - pad);
+
+    const x = Math.random() * (maxX - pad) + pad;
+    const y = Math.random() * (maxY - pad) + pad;
+
     noBtn.style.position = "fixed";
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
-  });
+    noBtn.style.zIndex = "9999";
+  }
 
-  yesBtn.addEventListener("click", ()=>{
-    success.style.display = "block";
-    yesBtn.disabled = true;
-    noBtn.disabled = true;
-  });
+  // Desktop hover
+  noBtn.addEventListener("mouseenter", moveNoButton);
 
-  document.getElementById("reset").onclick = (e)=>{
+  // Mobile touch
+  noBtn.addEventListener("touchstart", (e)=>{
     e.preventDefault();
-    location.reload();
-  };
+    moveNoButton();
+  }, { passive: false });
+
+  // Mobile panic zone
+  document.addEventListener("touchstart", (e)=>{
+    if (!screen1.classList.contains("active")) return;
+    const r = noBtn.getBoundingClientRect();
+    const t = e.touches[0];
+    const dx = Math.abs(t.clientX - (r.left + r.width/2));
+    const dy = Math.abs(t.clientY - (r.top + r.height/2));
+    if (dx < 130 && dy < 100) moveNoButton();
+  }, { passive: true });
 </script>
 
 </body>

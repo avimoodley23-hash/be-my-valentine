@@ -35,6 +35,30 @@
       padding:24px;
       overflow:hidden;
     }
+
+    /* Raining hearts layer */
+    .rain{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      overflow:hidden;
+    }
+    .drop{
+      position:absolute;
+      top:-10vh;
+      font-size:18px;
+      opacity:.75;
+      animation: fall linear infinite;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,.12));
+      transform: translate3d(0,0,0);
+      will-change: transform;
+    }
+    @keyframes fall{
+      from{ transform: translate3d(0,-12vh,0); }
+      to{ transform: translate3d(0,112vh,0); }
+    }
+
     .card{
       width:min(720px, 100%);
       background:var(--card);
@@ -42,6 +66,8 @@
       box-shadow:0 30px 80px rgba(0,0,0,.25);
       padding:28px;
       backdrop-filter: blur(10px);
+      position:relative;
+      z-index:1;
     }
     h1{
       margin:8px 0 6px;
@@ -51,6 +77,7 @@
       margin:0 0 18px;
       color:var(--muted);
       font-size:16px;
+      line-height:1.45;
     }
     .stage{
       margin-top:10px;
@@ -58,7 +85,7 @@
       background:#fff;
       padding:22px;
       border:1px solid #e5e7eb;
-      min-height:220px;
+      min-height:240px;
       position:relative;
       overflow:hidden;
     }
@@ -66,6 +93,9 @@
       display:flex;
       gap:14px;
       flex-wrap:wrap;
+      align-items:center;
+      position:relative;
+      min-height:70px;
     }
     button{
       border:0;
@@ -74,28 +104,38 @@
       font-size:16px;
       font-weight:800;
       cursor:pointer;
+      user-select:none;
+      touch-action: manipulation;
+      transform-origin: center;
     }
     .yes{
       background:var(--yes);
       color:white;
+      box-shadow:0 14px 30px rgba(22,163,74,.3);
+      transition: transform .12s ease, box-shadow .12s ease;
     }
     .no{
       background:#f3f4f6;
       border:1px solid #e5e7eb;
+      position:relative;
     }
+
     .screen{display:none}
     .screen.active{display:block}
+
     .big{
       font-size:clamp(22px,3vw,34px);
       font-weight:900;
+      margin:0 0 10px;
+      letter-spacing:-.02em;
     }
     .egg{
-      font-size:48px;
+      font-size:52px;
       position:fixed;
       cursor:pointer;
       user-select:none;
       z-index:9999;
-      transition: left 0.15s ease, top 0.15s ease;
+      transition: left 0.12s ease, top 0.12s ease;
     }
     .pill{
       display:inline-block;
@@ -108,10 +148,17 @@
       font-weight:800;
       font-size:14px;
     }
+    .tiny{
+      margin-top:12px;
+      font-size:13px;
+      color:#6b7280;
+    }
   </style>
 </head>
 
 <body>
+
+<div class="rain" id="rain"></div>
 
 <div class="card">
   <h1 id="headline">Hey Zozo 💘</h1>
@@ -121,11 +168,13 @@
     <!-- Screen 1 -->
     <div class="screen active" id="screen1">
       <p class="big">Will you be my Valentine, Bean?</p>
-      <div class="buttons">
+
+      <div class="buttons" id="btnZone">
         <button class="yes" id="yesBtn">Yes 💖</button>
         <button class="no" id="noBtn">No 😅</button>
       </div>
-      <p style="margin-top:14px">There is no wrong answer. Except one 😌</p>
+
+      <div class="tiny">There is no wrong answer. Except one. You know which one 😌</div>
     </div>
 
     <!-- Screen 2 -->
@@ -133,6 +182,7 @@
       <p class="big">Okay okay 😏</p>
       <p>One last thing.</p>
       <p><strong>Catch the eggplant 🍆</strong></p>
+      <div class="tiny">Tap it. If you can.</div>
     </div>
 
     <!-- Screen 3 -->
@@ -147,15 +197,45 @@
 <div class="egg" id="egg">🍆</div>
 
 <script>
-  // Secret title reveal
-  setTimeout(() => {
-    document.title = "Zozo, Bean, Zo 💘";
-  }, 600);
+  // Reveal tab title only after open
+  setTimeout(() => { document.title = "Zozo, Bean, Zo 💘"; }, 600);
 
+  // Name via URL: ?name=Zozo or ?name=Zo
   const params = new URLSearchParams(location.search);
   const name = params.get("name");
-  if(name) document.getElementById("headline").textContent = `Hey ${name} 💘`;
+  if (name) document.getElementById("headline").textContent = `Hey ${name} 💘`;
 
+  // Raining hearts for mobile + desktop
+  const rain = document.getElementById("rain");
+  const hearts = ["💗","💖","💘","💞","💕","❤️","💓","💝"];
+  const isReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function addDrop(){
+    const d = document.createElement("div");
+    d.className = "drop";
+    d.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    const left = Math.random() * 100;
+    const size = 14 + Math.random() * 20;
+    const dur = 4.5 + Math.random() * 6.5;
+    const delay = Math.random() * 1.2;
+
+    d.style.left = left + "vw";
+    d.style.fontSize = size + "px";
+    d.style.animationDuration = dur + "s";
+    d.style.animationDelay = delay + "s";
+    d.style.opacity = (0.35 + Math.random() * 0.55).toFixed(2);
+
+    rain.appendChild(d);
+    setTimeout(() => d.remove(), (dur + delay) * 1000 + 200);
+  }
+
+  if (!isReduced){
+    const density = window.innerWidth < 520 ? 320 : 220; // slower on phones
+    for (let i = 0; i < 18; i++) addDrop();
+    setInterval(addDrop, density);
+  }
+
+  // Screens
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const egg = document.getElementById("egg");
@@ -166,16 +246,86 @@
 
   egg.style.display = "none";
 
-  yesBtn.onclick = () => {
+  function showScreen(n){
     screen1.classList.remove("active");
-    screen2.classList.add("active");
+    screen2.classList.remove("active");
+    screen3.classList.remove("active");
+    document.getElementById("screen" + n).classList.add("active");
+  }
+
+  // YES grows as she chases NO
+  let yesScale = 1;
+  function growYes(){
+    yesScale = Math.min(2.1, yesScale + 0.10);
+    yesBtn.style.transform = `scale(${yesScale})`;
+    yesBtn.style.boxShadow = `0 18px 44px rgba(22,163,74,${Math.min(0.65, 0.25 + yesScale/6)})`;
+  }
+
+  // Make NO impossible, but never disappear
+  function moveNo(){
+    const pad = 10;
+
+    // Keep it inside the viewport
+    const w = noBtn.offsetWidth || 120;
+    const h = noBtn.offsetHeight || 52;
+
+    const maxX = Math.max(pad, window.innerWidth - w - pad);
+    const maxY = Math.max(pad, window.innerHeight - h - pad);
+
+    const x = Math.random() * (maxX - pad) + pad;
+    const y = Math.random() * (maxY - pad) + pad;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+    noBtn.style.zIndex = "9998";
+
+    growYes();
+  }
+
+  // Desktop: hover moves it
+  noBtn.addEventListener("mouseenter", moveNo);
+
+  // Mobile: touching it moves it before click registers
+  noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    moveNo();
+  }, { passive:false });
+
+  // Also panic if finger gets near the NO button
+  document.addEventListener("touchstart", (e)=>{
+    if (!screen1.classList.contains("active")) return;
+    const r = noBtn.getBoundingClientRect();
+    const t = e.touches[0];
+    const dx = Math.abs(t.clientX - (r.left + r.width/2));
+    const dy = Math.abs(t.clientY - (r.top + r.height/2));
+    if (dx < 140 && dy < 110) moveNo();
+  }, { passive:true });
+
+  // Just in case they manage to click NO
+  noBtn.addEventListener("click", (e)=>{
+    e.preventDefault();
+    moveNo();
+  });
+
+  // YES click goes to egg game
+  yesBtn.addEventListener("click", ()=>{
+    showScreen(2);
     egg.style.display = "block";
     moveEgg();
-  };
+  });
 
+  // Eggplant game
   function moveEgg(){
-    const x = Math.random() * (window.innerWidth - 60);
-    const y = Math.random() * (window.innerHeight - 60);
+    const pad = 12;
+    const w = 60;
+    const h = 60;
+    const maxX = Math.max(pad, window.innerWidth - w - pad);
+    const maxY = Math.max(pad, window.innerHeight - h - pad);
+
+    const x = Math.random() * (maxX - pad) + pad;
+    const y = Math.random() * (maxY - pad) + pad;
+
     egg.style.left = x + "px";
     egg.style.top = y + "px";
   }
@@ -188,23 +338,8 @@
 
   egg.addEventListener("click", ()=>{
     egg.style.display = "none";
-    screen2.classList.remove("active");
-    screen3.classList.add("active");
+    showScreen(3);
   });
-
-  function moveNo(){
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 60);
-    noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  }
-
-  noBtn.addEventListener("mouseenter", moveNo);
-  noBtn.addEventListener("touchstart", (e)=>{
-    e.preventDefault();
-    moveNo();
-  }, { passive:false });
 </script>
 
 </body>

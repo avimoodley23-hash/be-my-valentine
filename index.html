@@ -153,28 +153,6 @@
       border-top:1px solid #f3f4f6;
     }
 
-    /* Heart flood */
-    .heartFlood{
-      position:fixed;
-      inset:0;
-      z-index:10002;
-      pointer-events:none;
-      display:none;
-      overflow:hidden;
-    }
-    .heartFlood.active{ display:block; }
-    .floodHeart{
-      position:absolute;
-      opacity:0;
-      animation: floodPop 0.75s ease forwards;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
-    }
-    @keyframes floodPop{
-      0%{ transform: scale(0.45) translateY(10px); opacity:0; }
-      35%{ opacity:1; }
-      100%{ transform: scale(1.1) translateY(0); opacity:1; }
-    }
-
     /* Egg */
     .egg{
       font-size:52px;
@@ -296,12 +274,64 @@
       display:none;
     }
     .gateBtn.show{ display:block; }
+
+    /* Heart loading overlay */
+    .heartLoad{
+      position:fixed;
+      inset:0;
+      z-index:10040;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background: rgba(255,255,255,.18);
+      backdrop-filter: blur(12px);
+    }
+    .heartLoad.active{ display:flex; }
+    .heartCard{
+      width:min(520px, 100%);
+      background:#ffffffee;
+      border:1px solid #ffffffaa;
+      border-radius:22px;
+      box-shadow:0 30px 80px rgba(0,0,0,.18);
+      padding:22px;
+      text-align:center;
+    }
+    .pulse{
+      font-size:46px;
+      animation: pulse 0.9s ease-in-out infinite;
+      margin-bottom:10px;
+    }
+    @keyframes pulse{
+      0%{ transform: scale(0.9); opacity:0.65; }
+      50%{ transform: scale(1.12); opacity:1; }
+      100%{ transform: scale(0.9); opacity:0.65; }
+    }
+    .loadTitle{
+      margin:0 0 6px;
+      font-weight:900;
+      color:#111827;
+      font-size:16px;
+    }
+    .loadText{
+      margin:0;
+      color:#6b7280;
+      font-size:13px;
+      line-height:1.35;
+    }
   </style>
 </head>
 
 <body>
 
-<div class="heartFlood" id="heartFlood"></div>
+<!-- Heart loading overlay -->
+<div class="heartLoad" id="heartLoad">
+  <div class="heartCard">
+    <div class="pulse">💘</div>
+    <p class="loadTitle">Processing “YES”…</p>
+    <p class="loadText">Locking in the Valentine status 😌</p>
+  </div>
+</div>
 
 <!-- Captcha gate -->
 <div class="gate" id="gate">
@@ -387,8 +417,6 @@
     screen2.classList.remove("active");
     screen3.classList.remove("active");
     document.getElementById("screen" + n).classList.add("active");
-
-    // Hide header on screen 2+ (so it feels like a new page)
     if (n >= 2) card.classList.add("minimal");
     else card.classList.remove("minimal");
   }
@@ -449,30 +477,11 @@
     showScreen(1);
   });
 
-  // Heart flood transition
-  const heartFlood = document.getElementById("heartFlood");
-  function floodHearts(durationMs){
-    heartFlood.innerHTML = "";
-    heartFlood.classList.add("active");
-
-    const count = window.innerWidth < 520 ? 75 : 110;
-    const floodSet = ["💖","💘","💞","💕","❤️","💗","💝","✨"];
-
-    for (let i = 0; i < count; i++){
-      const h = document.createElement("div");
-      h.className = "floodHeart";
-      h.textContent = floodSet[Math.floor(Math.random() * floodSet.length)];
-      h.style.left = (Math.random() * 100) + "vw";
-      h.style.top = (Math.random() * 100) + "vh";
-      h.style.fontSize = (18 + Math.random() * 44) + "px";
-      h.style.animationDelay = (Math.random() * 0.35) + "s";
-      heartFlood.appendChild(h);
-    }
-
-    setTimeout(() => {
-      heartFlood.classList.remove("active");
-      heartFlood.innerHTML = "";
-    }, durationMs);
+  // Heart loading overlay
+  const heartLoad = document.getElementById("heartLoad");
+  function showHeartLoad(ms){
+    heartLoad.classList.add("active");
+    setTimeout(() => heartLoad.classList.remove("active"), ms);
   }
 
   // Buttons and egg
@@ -533,7 +542,7 @@
   }, { passive:true });
   noBtn.addEventListener("click", (e)=>{ e.preventDefault(); jitterNo(); });
 
-  // Egg is impossible: always dodges on hover, touch, or click
+  // Egg is impossible: always dodges
   function moveEgg(){
     const pad = 12;
     const w = 60;
@@ -543,13 +552,11 @@
     egg.style.left = (Math.random() * (maxX - pad) + pad) + "px";
     egg.style.top  = (Math.random() * (maxY - pad) + pad) + "px";
   }
-  function evadeEgg(){
-    moveEgg();
-  }
+  function evadeEgg(){ moveEgg(); }
 
-  // YES click -> heart flood -> screen 2 + show egg
+  // YES click -> heart loading -> screen 2
   yesBtn.addEventListener("click", () => {
-    floodHearts(950);
+    showHeartLoad(900);
     setTimeout(() => {
       showScreen(2);
       egg.style.display = "block";

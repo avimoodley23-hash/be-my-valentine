@@ -32,79 +32,8 @@
         radial-gradient(1200px 700px at 20% 10%, #ffd1e6 0%, transparent 55%),
         radial-gradient(900px 600px at 80% 20%, #c4b5fd 0%, transparent 55%),
         linear-gradient(135deg, var(--bg1), var(--bg2));
-      padding:24px;
+      padding:22px;
       overflow:hidden;
-    }
-
-    /* Raining hearts */
-    .rain{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
-      overflow:hidden;
-    }
-    .drop{
-      position:absolute;
-      top:-12vh;
-      font-size:18px;
-      opacity:.75;
-      animation: fall linear infinite;
-      filter: drop-shadow(0 8px 12px rgba(0,0,0,.12));
-      transform: translate3d(0,0,0);
-      will-change: transform;
-    }
-    @keyframes fall{
-      from{ transform: translate3d(0,-12vh,0); }
-      to{ transform: translate3d(0,112vh,0); }
-    }
-
-    /* Heart flood on YES */
-    .heartFlood{
-      position:fixed;
-      inset:0;
-      z-index:10002;
-      pointer-events:none;
-      display:none;
-      overflow:hidden;
-    }
-    .heartFlood.active{ display:block; }
-    .floodHeart{
-      position:absolute;
-      font-size:26px;
-      opacity:0;
-      animation: floodPop 0.8s ease forwards;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
-    }
-    @keyframes floodPop{
-      0%{ transform: scale(0.4) translateY(10px); opacity:0; }
-      35%{ opacity:1; }
-      100%{ transform: scale(1.15) translateY(0); opacity:1; }
-    }
-
-    /* Confetti */
-    .confetti{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:9999;
-      overflow:hidden;
-      display:none;
-    }
-    .confetti.active{ display:block; }
-    .conf{
-      position:absolute;
-      top:-10vh;
-      font-size:18px;
-      animation: confFall linear forwards;
-      opacity:.95;
-      transform: translate3d(0,0,0);
-      will-change: transform;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
-    }
-    @keyframes confFall{
-      from{ transform: translate3d(0,-14vh,0) rotate(0deg); }
-      to{ transform: translate3d(0,120vh,0) rotate(360deg); }
     }
 
     .card{
@@ -112,7 +41,7 @@
       background:var(--card);
       border-radius:28px;
       box-shadow:0 30px 80px rgba(0,0,0,.25);
-      padding:28px;
+      padding:26px;
       backdrop-filter: blur(10px);
       position:relative;
       z-index:1;
@@ -138,7 +67,6 @@
       position:relative;
       overflow:hidden;
     }
-
     .screen{ display:none; }
     .screen.active{ display:block; }
 
@@ -187,6 +115,7 @@
       position:relative;
       color:#111827;
     }
+
     .pill{
       display:inline-block;
       margin-top:10px;
@@ -197,78 +126,6 @@
       color:#065f46;
       font-weight:800;
       font-size:14px;
-    }
-
-    /* Loading overlay */
-    .overlay{
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:10000;
-      background: rgba(255,255,255,.18);
-      backdrop-filter: blur(10px);
-      padding:24px;
-    }
-    .overlay.hidden{ display:none; }
-    .overlayCard{
-      width:min(520px, 100%);
-      background:#ffffffee;
-      border:1px solid #ffffffaa;
-      border-radius:22px;
-      box-shadow:0 30px 80px rgba(0,0,0,.18);
-      padding:22px;
-      text-align:center;
-    }
-    .spinner{
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      border:5px solid rgba(0,0,0,.12);
-      border-top-color: rgba(0,0,0,.55);
-      margin:0 auto 14px;
-      animation: spin 0.9s linear infinite;
-    }
-    @keyframes spin{ to{ transform: rotate(360deg); } }
-
-    /* Egg */
-    .egg{
-      font-size:52px;
-      position:fixed;
-      cursor:pointer;
-      user-select:none;
-      z-index:9998;
-      transition: left 0.12s ease, top 0.12s ease;
-      display:none;
-    }
-
-    /* Toast message */
-    .toast{
-      position:fixed;
-      left:50%;
-      top:18px;
-      transform: translateX(-50%);
-      z-index:10001;
-      background: rgba(17,24,39,.78);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.22);
-      border-radius:999px;
-      padding:10px 14px;
-      font-weight:800;
-      font-size:13px;
-      letter-spacing:.2px;
-      backdrop-filter: blur(8px);
-      display:none;
-      pointer-events:none;
-    }
-    .toast.show{
-      display:block;
-      animation: pop .18s ease;
-    }
-    @keyframes pop{
-      from{ transform: translateX(-50%) translateY(-6px); opacity:0; }
-      to{ transform: translateX(-50%) translateY(0); opacity:1; }
     }
 
     /* Photo */
@@ -293,21 +150,225 @@
       background:#fff;
       border-top:1px solid #f3f4f6;
     }
+
+    /* Heart flood */
+    .heartFlood{
+      position:fixed;
+      inset:0;
+      z-index:10002;
+      pointer-events:none;
+      display:none;
+      overflow:hidden;
+    }
+    .heartFlood.active{ display:block; }
+    .floodHeart{
+      position:absolute;
+      opacity:0;
+      animation: floodPop 0.75s ease forwards;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
+    }
+    @keyframes floodPop{
+      0%{ transform: scale(0.45) translateY(10px); opacity:0; }
+      35%{ opacity:1; }
+      100%{ transform: scale(1.1) translateY(0); opacity:1; }
+    }
+
+    /* Confetti */
+    .confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:9999;
+      overflow:hidden;
+      display:none;
+    }
+    .confetti.active{ display:block; }
+    .conf{
+      position:absolute;
+      top:-10vh;
+      font-size:18px;
+      animation: confFall linear forwards;
+      opacity:.95;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
+    }
+    @keyframes confFall{
+      from{ transform: translate3d(0,-14vh,0) rotate(0deg); }
+      to{ transform: translate3d(0,120vh,0) rotate(360deg); }
+    }
+
+    /* Egg */
+    .egg{
+      font-size:52px;
+      position:fixed;
+      cursor:pointer;
+      user-select:none;
+      z-index:9998;
+      transition: left 0.12s ease, top 0.12s ease;
+      display:none;
+    }
+
+    /* Toast */
+    .toast{
+      position:fixed;
+      left:50%;
+      top:18px;
+      transform: translateX(-50%);
+      z-index:10001;
+      background: rgba(17,24,39,.78);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:800;
+      font-size:13px;
+      backdrop-filter: blur(8px);
+      display:none;
+      pointer-events:none;
+    }
+    .toast.show{ display:block; }
+
+    /* Captcha overlay */
+    .gate{
+      position:fixed;
+      inset:0;
+      z-index:10050;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background: rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+    }
+    .gate.hidden{ display:none; }
+    .gateCard{
+      width:min(520px, 100%);
+      background:#ffffffee;
+      border:1px solid #ffffffaa;
+      border-radius:22px;
+      box-shadow:0 30px 80px rgba(0,0,0,.18);
+      padding:20px;
+    }
+    .gateTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .gateTitle{
+      font-weight:900;
+      color:#111827;
+      margin:0;
+      font-size:16px;
+    }
+    .gateHint{
+      margin:0;
+      color:#6b7280;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .checkRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid #e5e7eb;
+      background:#fff;
+      margin-top:12px;
+    }
+    .box{
+      width:22px;
+      height:22px;
+      border-radius:6px;
+      border:2px solid #cbd5e1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      color:#16a34a;
+      flex:0 0 auto;
+    }
+    .box.checked{
+      border-color:#16a34a;
+      background:#ecfdf5;
+    }
+    .tapGrid{
+      margin-top:12px;
+      border-radius:18px;
+      border:1px solid #e5e7eb;
+      background:#fff;
+      padding:12px;
+      display:none;
+    }
+    .tapGrid.active{ display:block; }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    .cell{
+      border-radius:14px;
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      padding:10px 0;
+      text-align:center;
+      font-size:20px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .cell.hit{
+      background:#ecfdf5;
+      border-color:#bbf7d0;
+    }
+    @media (max-width: 520px){
+      .grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    .gateBtn{
+      margin-top:12px;
+      width:100%;
+      border-radius:16px;
+      padding:14px 16px;
+      font-weight:900;
+      background:#111827;
+      color:#fff;
+      border:0;
+      display:none;
+    }
+    .gateBtn.show{ display:block; }
   </style>
 </head>
 
 <body>
 
-<div class="rain" id="rain"></div>
-<div class="confetti" id="confetti"></div>
 <div class="heartFlood" id="heartFlood"></div>
+<div class="confetti" id="confetti"></div>
 <div class="toast" id="toast">Maybe you will get it later too 😉</div>
 
-<div class="overlay" id="overlay">
-  <div class="overlayCard">
-    <div class="spinner"></div>
-    <p style="font-weight:900; margin:0 0 6px; color:#111827;">Verifying Zozo’s answer…</p>
-    <p style="margin:0; color:#6b7280; font-size:14px;">Please wait. Bean level check in progress.</p>
+<!-- Captcha gate -->
+<div class="gate" id="gate">
+  <div class="gateCard">
+    <div class="gateTop">
+      <p class="gateTitle">Security check</p>
+      <p class="gateHint">Just making sure you’re Zozo 👀</p>
+    </div>
+
+    <div class="checkRow" id="robotRow">
+      <div class="box" id="robotBox"></div>
+      <div>
+        <div style="font-weight:900; color:#111827;">I am not a robot</div>
+        <div style="font-size:13px; color:#6b7280;">Tap to continue</div>
+      </div>
+    </div>
+
+    <div class="tapGrid" id="tapGrid">
+      <div style="font-weight:900; color:#111827;">Tiny captcha</div>
+      <div style="font-size:13px; color:#6b7280;">Tap <strong>3 hearts</strong> to prove you’re cute.</div>
+
+      <div class="grid" id="grid"></div>
+      <button class="gateBtn" id="enterBtn">Enter 😌</button>
+    </div>
   </div>
 </div>
 
@@ -316,19 +377,15 @@
   <p>Hi. It’s me. The guy who buys you food, gives you cuddles, and is pretty cool.</p>
 
   <div class="stage">
-    <!-- Screen 1 -->
     <div class="screen" id="screen1">
       <p class="big">Will you be my Valentine, Bean?</p>
-
       <div class="buttons">
         <button class="yes" id="yesBtn">Yes 💖</button>
         <button class="no" id="noBtn">No 😅</button>
       </div>
-
       <div class="tiny">There is no wrong answer. Except one. You know which one 😌</div>
     </div>
 
-    <!-- Screen 2 -->
     <div class="screen" id="screen2">
       <p class="big">Congratulations. You are my Valentine! 💘</p>
       <p>Thank you so much. I am finally at peace.</p>
@@ -343,7 +400,6 @@
       <div class="tiny" id="eggReady" style="display:none;">Okay fine. You can catch it now 😭 Tap it.</div>
     </div>
 
-    <!-- Screen 3 -->
     <div class="screen" id="screen3">
       <p class="big">You said yes 😭💞</p>
       <p>That means it’s a promise of a whole lot of happiness, food, and fun.</p>
@@ -361,7 +417,7 @@
   const name = params.get("name");
   if (name) document.getElementById("headline").textContent = `Hey ${name} 💘`;
 
-  const overlay = document.getElementById("overlay");
+  // Screens
   const screen1 = document.getElementById("screen1");
   const screen2 = document.getElementById("screen2");
   const screen3 = document.getElementById("screen3");
@@ -373,93 +429,81 @@
     document.getElementById("screen" + n).classList.add("active");
   }
 
-  setTimeout(() => {
-    overlay.classList.add("hidden");
-    showScreen(1);
-  }, 1500);
+  // Captcha gate logic
+  const gate = document.getElementById("gate");
+  const robotRow = document.getElementById("robotRow");
+  const robotBox = document.getElementById("robotBox");
+  const tapGrid = document.getElementById("tapGrid");
+  const grid = document.getElementById("grid");
+  const enterBtn = document.getElementById("enterBtn");
 
-  // Background raining hearts
-  const rain = document.getElementById("rain");
-  const heartChars = ["💗","💖","💘","💞","💕","❤️","💓","💝"];
-  const isReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let heartsNeeded = 3;
+  let heartsTapped = 0;
 
-  function addDrop(){
-    const d = document.createElement("div");
-    d.className = "drop";
-    d.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
-    const left = Math.random() * 100;
-    const size = 14 + Math.random() * 20;
-    const dur = 4.8 + Math.random() * 7.2;
-    const delay = Math.random() * 1.4;
+  function buildGrid(){
+    grid.innerHTML = "";
+    heartsTapped = 0;
+    enterBtn.classList.remove("show");
 
-    d.style.left = left + "vw";
-    d.style.fontSize = size + "px";
-    d.style.animationDuration = dur + "s";
-    d.style.animationDelay = delay + "s";
-    d.style.opacity = (0.35 + Math.random() * 0.55).toFixed(2);
+    const items = [];
+    // Put more hearts than needed so it feels easy
+    for (let i = 0; i < 6; i++) items.push("💖");
+    for (let i = 0; i < 10; i++) items.push(["🍕","✨","🌸","🍣","😌","🍦"][Math.floor(Math.random()*6)]);
 
-    rain.appendChild(d);
-    setTimeout(() => d.remove(), (dur + delay) * 1000 + 250);
-  }
-
-  if (!isReduced){
-    const density = window.innerWidth < 520 ? 280 : 190;
-    for (let i = 0; i < 22; i++) addDrop();
-    setInterval(addDrop, density);
-  }
-
-  // Confetti
-  const confetti = document.getElementById("confetti");
-  const confChars = ["💖","💘","✨","🎉","💗","💕","❤️","🌸","⭐"];
-  function burstConfetti(){
-    confetti.classList.add("active");
-    const count = window.innerWidth < 520 ? 28 : 42;
-
-    for (let i = 0; i < count; i++){
-      const c = document.createElement("div");
-      c.className = "conf";
-      c.textContent = confChars[Math.floor(Math.random() * confChars.length)];
-      const left = Math.random() * 100;
-      const size = 14 + Math.random() * 24;
-      const dur = 2.7 + Math.random() * 1.8;
-
-      c.style.left = left + "vw";
-      c.style.fontSize = size + "px";
-      c.style.animationDuration = dur + "s";
-      c.style.opacity = (0.65 + Math.random() * 0.35).toFixed(2);
-
-      confetti.appendChild(c);
-      setTimeout(() => c.remove(), (dur * 1000) + 220);
+    // Shuffle
+    for (let i = items.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
     }
-    setTimeout(() => confetti.classList.remove("active"), 3600);
+
+    const shown = items.slice(0, 20);
+    shown.forEach((emoji) => {
+      const c = document.createElement("div");
+      c.className = "cell";
+      c.textContent = emoji;
+      c.addEventListener("click", () => {
+        if (c.classList.contains("hit")) return;
+        c.classList.add("hit");
+        if (emoji === "💖"){
+          heartsTapped += 1;
+          if (heartsTapped >= heartsNeeded){
+            enterBtn.classList.add("show");
+          }
+        }
+      });
+      grid.appendChild(c);
+    });
   }
 
-  // Toast
-  const toast = document.getElementById("toast");
-  function showToast(){
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 3200);
-  }
+  robotRow.addEventListener("click", () => {
+    robotBox.classList.add("checked");
+    robotBox.textContent = "✓";
+    tapGrid.classList.add("active");
+    buildGrid();
+  });
 
-  // Heart flood effect
+  enterBtn.addEventListener("click", () => {
+    gate.classList.add("hidden");
+    showScreen(1);
+  });
+
+  // Heart flood transition
   const heartFlood = document.getElementById("heartFlood");
   function floodHearts(durationMs){
     heartFlood.innerHTML = "";
     heartFlood.classList.add("active");
 
-    const count = window.innerWidth < 520 ? 85 : 130;
+    const count = window.innerWidth < 520 ? 75 : 110;
     const floodSet = ["💖","💘","💞","💕","❤️","💗","💝","✨"];
 
     for (let i = 0; i < count; i++){
       const h = document.createElement("div");
       h.className = "floodHeart";
       h.textContent = floodSet[Math.floor(Math.random() * floodSet.length)];
-
       h.style.left = (Math.random() * 100) + "vw";
       h.style.top = (Math.random() * 100) + "vh";
       h.style.fontSize = (18 + Math.random() * 44) + "px";
-      h.style.animationDelay = (Math.random() * 0.45) + "s";
-
+      h.style.animationDelay = (Math.random() * 0.35) + "s";
       heartFlood.appendChild(h);
     }
 
@@ -467,6 +511,33 @@
       heartFlood.classList.remove("active");
       heartFlood.innerHTML = "";
     }, durationMs);
+  }
+
+  // Confetti
+  const confetti = document.getElementById("confetti");
+  const confChars = ["💖","💘","✨","🎉","💗","💕","❤️","🌸","⭐"];
+  function burstConfetti(){
+    confetti.classList.add("active");
+    const count = window.innerWidth < 520 ? 26 : 38;
+
+    for (let i = 0; i < count; i++){
+      const c = document.createElement("div");
+      c.className = "conf";
+      c.textContent = confChars[Math.floor(Math.random() * confChars.length)];
+      c.style.left = (Math.random() * 100) + "vw";
+      c.style.fontSize = (14 + Math.random() * 22) + "px";
+      c.style.animationDuration = (2.6 + Math.random() * 1.6) + "s";
+      confetti.appendChild(c);
+      setTimeout(() => c.remove(), 4500);
+    }
+    setTimeout(() => confetti.classList.remove("active"), 3200);
+  }
+
+  // Toast
+  const toast = document.getElementById("toast");
+  function showToast(){
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3200);
   }
 
   // Buttons and egg
@@ -477,12 +548,12 @@
   // Yes grows as she chases No
   let yesScale = 1;
   function growYes(){
-    yesScale = Math.min(2.6, yesScale + 0.10);
+    yesScale = Math.min(2.4, yesScale + 0.10);
     yesBtn.style.transform = `scale(${yesScale})`;
     yesBtn.style.boxShadow = `0 18px 44px rgba(22,163,74,${Math.min(0.75, 0.25 + yesScale/6)})`;
   }
 
-  // No jitter zone
+  // No jitter
   let noHome = null;
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
   function setNoHomeIfNeeded(){
@@ -494,8 +565,8 @@
     setNoHomeIfNeeded();
 
     const pad = 10;
-    const zoneRadiusX = Math.max(120, Math.min(240, window.innerWidth * 0.24));
-    const zoneRadiusY = Math.max(95,  Math.min(190, window.innerHeight * 0.18));
+    const zoneRadiusX = Math.max(120, Math.min(220, window.innerWidth * 0.22));
+    const zoneRadiusY = Math.max(95,  Math.min(170, window.innerHeight * 0.16));
 
     const rx = (Math.random() * 2 - 1) * zoneRadiusX;
     const ry = (Math.random() * 2 - 1) * zoneRadiusY;
@@ -516,17 +587,6 @@
   window.addEventListener("resize", () => { noHome = null; });
 
   noBtn.addEventListener("mouseenter", jitterNo);
-  document.addEventListener("mousemove", (e) => {
-    if (!screen1.classList.contains("active")) return;
-    setNoHomeIfNeeded();
-    const r = noBtn.getBoundingClientRect();
-    const cx = r.left + r.width/2;
-    const cy = r.top + r.height/2;
-    const dx = Math.abs(e.clientX - cx);
-    const dy = Math.abs(e.clientY - cy);
-    if (dx < 150 && dy < 120) jitterNo();
-  });
-
   noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); jitterNo(); }, { passive:false });
   document.addEventListener("touchstart", (e) => {
     if (!screen1.classList.contains("active")) return;
@@ -536,7 +596,6 @@
     const dy = Math.abs(t.clientY - (r.top + r.height/2));
     if (dx < 165 && dy < 135) jitterNo();
   }, { passive:true });
-
   noBtn.addEventListener("click", (e)=>{ e.preventDefault(); jitterNo(); });
 
   // Egg attempts
@@ -547,9 +606,7 @@
 
   function updateEggUI(){
     eggAttemptsEl.textContent = String(eggDodges);
-    if (eggDodges >= maxDodges){
-      eggReadyEl.style.display = "block";
-    }
+    if (eggDodges >= maxDodges) eggReadyEl.style.display = "block";
   }
 
   function moveEgg(){
@@ -570,9 +627,9 @@
     }
   }
 
-  // YES click -> flood hearts -> show page 2
+  // YES click -> heart flood -> screen 2
   yesBtn.addEventListener("click", () => {
-    floodHearts(1150);
+    floodHearts(950);
     setTimeout(() => {
       showScreen(2);
       eggDodges = 0;
@@ -580,7 +637,7 @@
       updateEggUI();
       egg.style.display = "block";
       moveEgg();
-    }, 850);
+    }, 700);
   });
 
   egg.addEventListener("mouseenter", eggDodge);

@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Zozo, Bean, Zo 💘</title>
 
-  <!-- Link previews -->
-  <meta property="og:title" content="Zozo… quick question 💖">
-  <meta property="og:description" content="Open this and answer honestly. Bean. 😌">
+  <!-- SECRET PREVIEW -->
+  <title>Quick question</title>
+  <meta property="og:title" content="Quick question">
+  <meta property="og:description" content="Open when you have a second">
   <meta property="og:type" content="website">
 
   <style>
@@ -35,40 +35,22 @@
       padding:24px;
       overflow:hidden;
     }
-    .hearts{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.25;
-    }
-    .heart{
-      position:absolute;
-      font-size:20px;
-      animation: floatUp linear infinite;
-      transform: translateY(110vh);
-    }
-    @keyframes floatUp{
-      from{ transform: translateY(110vh) rotate(0deg); }
-      to{ transform: translateY(-15vh) rotate(18deg); }
-    }
     .card{
       width:min(720px, 100%);
       background:var(--card);
       border-radius:28px;
-      box-shadow: 0 30px 80px rgba(0,0,0,.25);
+      box-shadow:0 30px 80px rgba(0,0,0,.25);
       padding:28px;
       backdrop-filter: blur(10px);
     }
     h1{
       margin:8px 0 6px;
-      font-size: clamp(30px, 4vw, 44px);
-      letter-spacing:-.03em;
+      font-size:clamp(30px,4vw,44px);
     }
     p{
       margin:0 0 18px;
       color:var(--muted);
       font-size:16px;
-      line-height:1.45;
     }
     .stage{
       margin-top:10px;
@@ -76,20 +58,14 @@
       background:#fff;
       padding:22px;
       border:1px solid #e5e7eb;
+      min-height:220px;
       position:relative;
       overflow:hidden;
-      min-height: 210px;
-    }
-    .question{
-      font-size: clamp(20px, 3vw, 30px);
-      margin:0 0 14px;
-      letter-spacing:-.02em;
     }
     .buttons{
       display:flex;
       gap:14px;
       flex-wrap:wrap;
-      align-items:center;
     }
     button{
       border:0;
@@ -98,31 +74,28 @@
       font-size:16px;
       font-weight:800;
       cursor:pointer;
-      user-select:none;
     }
-    button:active{ transform: scale(.98); }
     .yes{
       background:var(--yes);
       color:white;
-      box-shadow:0 14px 30px rgba(22,163,74,.3);
     }
     .no{
       background:#f3f4f6;
       border:1px solid #e5e7eb;
     }
-
-    .screen{ display:none; animation: fadeIn .25s ease; }
-    .screen.active{ display:block; }
-    @keyframes fadeIn{
-      from{ opacity:0; transform: translateY(6px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
+    .screen{display:none}
+    .screen.active{display:block}
     .big{
-      font-size: clamp(22px, 3.2vw, 34px);
+      font-size:clamp(22px,3vw,34px);
       font-weight:900;
-      margin:0 0 10px;
-      letter-spacing:-.02em;
+    }
+    .egg{
+      font-size:48px;
+      position:fixed;
+      cursor:pointer;
+      user-select:none;
+      z-index:9999;
+      transition: left 0.15s ease, top 0.15s ease;
     }
     .pill{
       display:inline-block;
@@ -135,173 +108,103 @@
       font-weight:800;
       font-size:14px;
     }
-    .footer{
-      margin-top:14px;
-      font-size:12px;
-      color:#6b7280;
-      display:flex;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-    a{ color:#374151; font-weight:800; text-decoration:none; }
-    a:hover{ text-decoration:underline; }
   </style>
 </head>
-<body>
 
-<div class="hearts" id="hearts"></div>
+<body>
 
 <div class="card">
   <h1 id="headline">Hey Zozo 💘</h1>
-  <p id="subline">Hi. It’s me. The guy who would rather code a website than risk fumbling in person.</p>
+  <p>Hi. It’s me. The guy who would rather code a website than risk fumbling in person.</p>
 
   <div class="stage">
     <!-- Screen 1 -->
     <div class="screen active" id="screen1">
-      <div class="question" id="questionText">Will you be my Valentine, Bean?</div>
-
+      <p class="big">Will you be my Valentine, Bean?</p>
       <div class="buttons">
         <button class="yes" id="yesBtn">Yes 💖</button>
         <button class="no" id="noBtn">No 😅</button>
       </div>
-
-      <p style="margin-top:14px" id="hint">There is no wrong answer. Except one. You know which one 😌</p>
+      <p style="margin-top:14px">There is no wrong answer. Except one 😌</p>
     </div>
 
     <!-- Screen 2 -->
     <div class="screen" id="screen2">
-      <div class="big" id="yesTitle">Yessss. My heart just did a backflip 😭💞</div>
-      <p id="yesBody">Cool. Picked you up at 7 😌 Wear something cute. I’ll be the one staring respectfully.</p>
-      <div class="pill" id="yesPill">Screenshot this and send it to me</div>
-
-      <div class="buttons" style="margin-top:16px">
-        <button class="yes" id="backBtn" style="background:#111827; box-shadow:none;">Back</button>
-        <button class="no" id="copyBtn">Copy link</button>
-      </div>
+      <p class="big">Okay okay 😏</p>
+      <p>One last thing.</p>
+      <p><strong>Catch the eggplant 🍆</strong></p>
     </div>
-  </div>
 
-  <div class="footer">
-    <div id="signature">Made for Zo, by Avi</div>
-    <div><a href="#" id="reset">Reset</a></div>
+    <!-- Screen 3 -->
+    <div class="screen" id="screen3">
+      <p class="big">Yessss. My heart just did a backflip 😭💞</p>
+      <p>Cool. Picked you up at 7 😌 Wear something cute. I’ll be the one staring respectfully.</p>
+      <div class="pill">Screenshot this and send it to me</div>
+    </div>
   </div>
 </div>
 
+<div class="egg" id="egg">🍆</div>
+
 <script>
-  // Cute custom copy in one place
-  const CONFIG = {
-    herNameFallback: "Zozo",
-    headline: (herName) => `Hey ${herName} 💘`,
-    subline: "Hi. It’s me. The guy who would rather code a website than risk fumbling in person.",
-    question: "Will you be my Valentine, Bean?",
-    hint: "There is no wrong answer. Except one. You know which one 😌",
-    yesTitle: "Yessss. My heart just did a backflip 😭💞",
-    yesBody: "Cool. Picked you up at 7 😌 Wear something cute. I’ll be the one staring respectfully.",
-    signature: "Made for Zo, by Avi"
-  };
+  // Secret title reveal
+  setTimeout(() => {
+    document.title = "Zozo, Bean, Zo 💘";
+  }, 600);
 
-  // Name via URL: ?name=Zozo or ?name=Zo
   const params = new URLSearchParams(location.search);
-  const herName = params.get("name") || CONFIG.herNameFallback;
-
-  document.getElementById("headline").textContent = CONFIG.headline(herName);
-  document.getElementById("subline").textContent = CONFIG.subline;
-  document.getElementById("questionText").textContent = CONFIG.question;
-  document.getElementById("hint").textContent = CONFIG.hint;
-  document.getElementById("yesTitle").textContent = CONFIG.yesTitle;
-  document.getElementById("yesBody").textContent = CONFIG.yesBody;
-  document.getElementById("signature").textContent = CONFIG.signature;
-
-  // Floating hearts
-  const hearts = document.getElementById("hearts");
-  const heartChars = ["💗","💖","💘","💞","💕","❤️","💓","💝"];
-  function spawnHeart(){
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
-    h.style.left = Math.random()*100 + "vw";
-    h.style.animationDuration = (6 + Math.random()*10) + "s";
-    h.style.fontSize = (16 + Math.random()*18) + "px";
-    h.style.opacity = (0.25 + Math.random()*0.55).toFixed(2);
-    hearts.appendChild(h);
-    setTimeout(()=>h.remove(), 13000);
-  }
-  for(let i=0;i<18;i++) spawnHeart();
-  setInterval(spawnHeart, 620);
-
-  // Screen switching
-  const screen1 = document.getElementById("screen1");
-  const screen2 = document.getElementById("screen2");
-  const show = (id) => {
-    screen1.classList.remove("active");
-    screen2.classList.remove("active");
-    document.getElementById(id).classList.add("active");
-  };
+  const name = params.get("name");
+  if(name) document.getElementById("headline").textContent = `Hey ${name} 💘`;
 
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
+  const egg = document.getElementById("egg");
 
-  yesBtn.addEventListener("click", ()=> show("screen2"));
-  document.getElementById("backBtn").addEventListener("click", ()=> show("screen1"));
+  const screen1 = document.getElementById("screen1");
+  const screen2 = document.getElementById("screen2");
+  const screen3 = document.getElementById("screen3");
 
-  // Copy link button
-  document.getElementById("copyBtn").addEventListener("click", async ()=>{
-    try{
-      await navigator.clipboard.writeText(location.href);
-      const btn = document.getElementById("copyBtn");
-      btn.textContent = "Copied 😌";
-      setTimeout(()=> btn.textContent = "Copy link", 1400);
-    }catch(e){
-      alert("Copy failed, just copy the URL from the address bar.");
-    }
-  });
+  egg.style.display = "none";
 
-  // Reset
-  document.getElementById("reset").addEventListener("click", (e)=>{
+  yesBtn.onclick = () => {
+    screen1.classList.remove("active");
+    screen2.classList.add("active");
+    egg.style.display = "block";
+    moveEgg();
+  };
+
+  function moveEgg(){
+    const x = Math.random() * (window.innerWidth - 60);
+    const y = Math.random() * (window.innerHeight - 60);
+    egg.style.left = x + "px";
+    egg.style.top = y + "px";
+  }
+
+  egg.addEventListener("mouseenter", moveEgg);
+  egg.addEventListener("touchstart", (e)=>{
     e.preventDefault();
-    show("screen1");
-    noBtn.style.position = "relative";
-    noBtn.style.left = "auto";
-    noBtn.style.top = "auto";
+    moveEgg();
+  }, { passive:false });
+
+  egg.addEventListener("click", ()=>{
+    egg.style.display = "none";
+    screen2.classList.remove("active");
+    screen3.classList.add("active");
   });
 
-  // Make No flee harder, including on mobile
-  function moveNoButton(){
-    const pad = 10;
-    const btnW = noBtn.offsetWidth || 120;
-    const btnH = noBtn.offsetHeight || 52;
-
-    const maxX = Math.max(pad, window.innerWidth - btnW - pad);
-    const maxY = Math.max(pad, window.innerHeight - btnH - pad);
-
-    const x = Math.random() * (maxX - pad) + pad;
-    const y = Math.random() * (maxY - pad) + pad;
-
+  function moveNo(){
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
     noBtn.style.position = "fixed";
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
-    noBtn.style.zIndex = "9999";
   }
 
-  // Desktop hover
-  noBtn.addEventListener("mouseenter", moveNoButton);
-
-  // Mobile touch
+  noBtn.addEventListener("mouseenter", moveNo);
   noBtn.addEventListener("touchstart", (e)=>{
     e.preventDefault();
-    moveNoButton();
-  }, { passive: false });
-
-  // Mobile panic zone
-  document.addEventListener("touchstart", (e)=>{
-    if (!screen1.classList.contains("active")) return;
-    const r = noBtn.getBoundingClientRect();
-    const t = e.touches[0];
-    const dx = Math.abs(t.clientX - (r.left + r.width/2));
-    const dy = Math.abs(t.clientY - (r.top + r.height/2));
-    if (dx < 130 && dy < 100) moveNoButton();
-  }, { passive: true });
+    moveNo();
+  }, { passive:false });
 </script>
 
 </body>

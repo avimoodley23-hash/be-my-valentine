@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Be My Valentine?</title>
+
+  <!-- Link preview for WhatsApp / iMessage -->
+  <meta property="og:title" content="Will you be my Valentine? 💖">
+  <meta property="og:description" content="I made you a website… please say yes.">
+  <meta property="og:type" content="website">
+
+  <style>
+    :root{
+      --bg1:#ff5fa2;
+      --bg2:#7c3aed;
+      --card:#ffffffee;
+      --text:#111827;
+      --muted:#6b7280;
+      --yes:#16a34a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, #ffd1e6 0%, transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, #c4b5fd 0%, transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      padding:24px;
+      overflow:hidden;
+    }
+    .hearts{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.25;
+    }
+    .heart{
+      position:absolute;
+      font-size:20px;
+      animation: floatUp linear infinite;
+      transform: translateY(110vh);
+    }
+    @keyframes floatUp{
+      from{ transform: translateY(110vh) rotate(0deg); }
+      to{ transform: translateY(-15vh) rotate(18deg); }
+    }
+    .card{
+      width:min(680px, 100%);
+      background:var(--card);
+      border-radius:28px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.25);
+      padding:28px;
+      backdrop-filter: blur(10px);
+    }
+    h1{
+      margin:12px 0 6px;
+      font-size: clamp(32px, 4vw, 44px);
+      letter-spacing:-.03em;
+    }
+    p{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:16px;
+    }
+    .stage{
+      margin-top:10px;
+      border-radius:22px;
+      background:#fff;
+      padding:22px;
+      border:1px solid #e5e7eb;
+    }
+    .question{
+      font-size: clamp(22px, 3vw, 30px);
+      margin-bottom:16px;
+    }
+    .buttons{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    button{
+      border:0;
+      border-radius:16px;
+      padding:14px 20px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .yes{
+      background:var(--yes);
+      color:white;
+      box-shadow:0 14px 30px rgba(22,163,74,.3);
+    }
+    .no{
+      background:#f3f4f6;
+      border:1px solid #e5e7eb;
+    }
+    .success{
+      display:none;
+      margin-top:16px;
+      padding:16px;
+      border-radius:16px;
+      background:#ecfdf5;
+      border:1px solid #bbf7d0;
+      color:#065f46;
+      font-weight:700;
+    }
+    .success small{
+      display:block;
+      margin-top:6px;
+      font-weight:600;
+    }
+    .footer{
+      margin-top:14px;
+      font-size:12px;
+      color:#6b7280;
+      display:flex;
+      justify-content:space-between;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hearts" id="hearts"></div>
+
+<div class="card">
+  <h1>Hey <span id="herName">my love</span> 💘</h1>
+  <p>I made you a website because asking normally felt boring.</p>
+
+  <div class="stage">
+    <div class="question">Will you be my Valentine?</div>
+
+    <div class="buttons">
+      <button class="yes" id="yesBtn">Yes 💖</button>
+      <button class="no" id="noBtn">No 😅</button>
+    </div>
+
+    <div class="success" id="success">
+      It’s official 🎉💞
+      <small>Screenshot this and send it to me 😌</small>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>Made with love</div>
+    <div><a href="#" id="reset">Reset</a></div>
+  </div>
+</div>
+
+<script>
+  // Name from URL
+  const params = new URLSearchParams(location.search);
+  const name = params.get("name");
+  if(name) document.getElementById("herName").textContent = name;
+
+  // Floating hearts
+  const hearts = document.getElementById("hearts");
+  const heartChars = ["💗","💖","💘","💞","💕","❤️"];
+  function spawnHeart(){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+    h.style.left = Math.random()*100 + "vw";
+    h.style.animationDuration = 6 + Math.random()*10 + "s";
+    hearts.appendChild(h);
+    setTimeout(()=>h.remove(),12000);
+  }
+  for(let i=0;i<15;i++) spawnHeart();
+  setInterval(spawnHeart,700);
+
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const success = document.getElementById("success");
+
+  noBtn.addEventListener("mouseenter", ()=>{
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  });
+
+  yesBtn.addEventListener("click", ()=>{
+    success.style.display = "block";
+    yesBtn.disabled = true;
+    noBtn.disabled = true;
+  });
+
+  document.getElementById("reset").onclick = (e)=>{
+    e.preventDefault();
+    location.reload();
+  };
+</script>
+
+</body>
+</html>

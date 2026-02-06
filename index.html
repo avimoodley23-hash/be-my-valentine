@@ -59,6 +59,29 @@
       to{ transform: translate3d(0,112vh,0); }
     }
 
+    /* Heart flood on YES */
+    .heartFlood{
+      position:fixed;
+      inset:0;
+      z-index:10002;
+      pointer-events:none;
+      display:none;
+      overflow:hidden;
+    }
+    .heartFlood.active{ display:block; }
+    .floodHeart{
+      position:absolute;
+      font-size:26px;
+      opacity:0;
+      animation: floodPop 0.8s ease forwards;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
+    }
+    @keyframes floodPop{
+      0%{ transform: scale(0.4) translateY(10px); opacity:0; }
+      35%{ opacity:1; }
+      100%{ transform: scale(1.15) translateY(0); opacity:1; }
+    }
+
     /* Confetti */
     .confetti{
       position:fixed;
@@ -208,53 +231,6 @@
       animation: spin 0.9s linear infinite;
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
-    .overlayTitle{
-      font-weight:900;
-      font-size:18px;
-      margin:0 0 6px;
-      color:#111827;
-      letter-spacing:-.01em;
-    }
-    .overlayText{
-      margin:0;
-      color:#6b7280;
-      font-size:14px;
-      line-height:1.35;
-    }
-
-    /* Date menu */
-    .menu{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-    .choice{
-      border:1px solid #e5e7eb;
-      background:#f9fafb;
-      border-radius:18px;
-      padding:14px;
-      cursor:pointer;
-      user-select:none;
-      transition: transform .08s ease, background .15s ease;
-      text-align:left;
-    }
-    .choice:active{ transform: scale(.98); }
-    .choice strong{
-      display:block;
-      font-size:14px;
-      color:#111827;
-      margin-bottom:6px;
-    }
-    .choice span{
-      display:block;
-      font-size:12px;
-      color:#6b7280;
-      line-height:1.25;
-    }
-    @media (max-width: 520px){
-      .menu{ grid-template-columns: 1fr; }
-    }
 
     /* Egg */
     .egg{
@@ -267,24 +243,56 @@
       display:none;
     }
 
-    /* Audio toggle */
-    .audioToggle{
+    /* Toast message */
+    .toast{
       position:fixed;
-      right:14px;
-      bottom:14px;
+      left:50%;
+      top:18px;
+      transform: translateX(-50%);
       z-index:10001;
-      border:1px solid rgba(255,255,255,.55);
-      background: rgba(17,24,39,.65);
+      background: rgba(17,24,39,.78);
       color:#fff;
-      backdrop-filter: blur(8px);
+      border:1px solid rgba(255,255,255,.22);
       border-radius:999px;
-      padding:10px 12px;
+      padding:10px 14px;
       font-weight:800;
       font-size:13px;
-      cursor:pointer;
-      user-select:none;
+      letter-spacing:.2px;
+      backdrop-filter: blur(8px);
+      display:none;
+      pointer-events:none;
     }
-    .audioToggle:active{ transform: scale(.98); }
+    .toast.show{
+      display:block;
+      animation: pop .18s ease;
+    }
+    @keyframes pop{
+      from{ transform: translateX(-50%) translateY(-6px); opacity:0; }
+      to{ transform: translateX(-50%) translateY(0); opacity:1; }
+    }
+
+    /* Photo */
+    .photoWrap{
+      margin-top:14px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid #e5e7eb;
+      box-shadow:0 18px 40px rgba(0,0,0,.12);
+      background:#fff;
+    }
+    .photoWrap img{
+      width:100%;
+      height:auto;
+      display:block;
+      object-fit:cover;
+    }
+    .caption{
+      padding:10px 12px;
+      font-size:13px;
+      color:#6b7280;
+      background:#fff;
+      border-top:1px solid #f3f4f6;
+    }
   </style>
 </head>
 
@@ -292,19 +300,20 @@
 
 <div class="rain" id="rain"></div>
 <div class="confetti" id="confetti"></div>
-<button class="audioToggle" id="audioToggle">Sound: Off</button>
+<div class="heartFlood" id="heartFlood"></div>
+<div class="toast" id="toast">Maybe you will get it later too 😉</div>
 
 <div class="overlay" id="overlay">
   <div class="overlayCard">
     <div class="spinner"></div>
-    <p class="overlayTitle">Verifying Zozo’s answer…</p>
-    <p class="overlayText">Please wait. Bean level check in progress.</p>
+    <p style="font-weight:900; margin:0 0 6px; color:#111827;">Verifying Zozo’s answer…</p>
+    <p style="margin:0; color:#6b7280; font-size:14px;">Please wait. Bean level check in progress.</p>
   </div>
 </div>
 
 <div class="card">
   <h1 id="headline">Hey Zozo 💘</h1>
-  <p id="subline">Hi. It’s me. The guy who buys you food, gives you cuddles, and is pretty cool.</p>
+  <p>Hi. It’s me. The guy who buys you food, gives you cuddles, and is pretty cool.</p>
 
   <div class="stage">
     <!-- Screen 1 -->
@@ -321,10 +330,16 @@
 
     <!-- Screen 2 -->
     <div class="screen" id="screen2">
-      <p class="big">Thank you for being my Valentine! 💘</p>
-      <p>One last thing.</p>
-      <p><strong>Catch the eggplant 🍆</strong></p>
-      <div class="tiny" id="eggHint">Attempts: <span id="eggAttempts">0</span> of 5</div>
+      <p class="big">Congratulations. You are my Valentine! 💘</p>
+      <p>Thank you so much. I am finally at peace.</p>
+
+      <div class="photoWrap">
+        <img src="us.jpg" alt="Us">
+        <div class="caption">Us 🥹</div>
+      </div>
+
+      <p style="margin-top:14px;"><strong>Now catch the eggplant 🍆</strong></p>
+      <div class="tiny">Attempts: <span id="eggAttempts">0</span> of 5</div>
       <div class="tiny" id="eggReady" style="display:none;">Okay fine. You can catch it now 😭 Tap it.</div>
     </div>
 
@@ -332,25 +347,7 @@
     <div class="screen" id="screen3">
       <p class="big">You said yes 😭💞</p>
       <p>That means it’s a promise of a whole lot of happiness, food, and fun.</p>
-      <p><strong>Choose our Valentine vibe:</strong></p>
-
-      <div class="menu" id="menu">
-        <div class="choice" data-choice="Sushi night 🍣">
-          <strong>Sushi night 🍣</strong>
-          <span>Fancy, cute, we pretend we’re classy.</span>
-        </div>
-        <div class="choice" data-choice="Pizza date 🍕">
-          <strong>Pizza date 🍕</strong>
-          <span>Maximum comfort, maximum joy.</span>
-        </div>
-        <div class="choice" data-choice="Ice cream mission 🍦">
-          <strong>Ice cream mission 🍦</strong>
-          <span>Sweet, chaotic, and we share bites.</span>
-        </div>
-      </div>
-
-      <div class="pill" id="picked" style="display:none; margin-top:14px;"></div>
-      <div class="tiny" id="pickedHint" style="display:none;">Screenshot this and send it to me 😌</div>
+      <div class="pill">Screenshot this and send it to me 😌</div>
     </div>
   </div>
 </div>
@@ -358,15 +355,12 @@
 <div class="egg" id="egg">🍆</div>
 
 <script>
-  // Reveal tab title after open
   setTimeout(() => { document.title = "Zozo, Bean, Zo 💘"; }, 650);
 
-  // Name via URL
   const params = new URLSearchParams(location.search);
   const name = params.get("name");
   if (name) document.getElementById("headline").textContent = `Hey ${name} 💘`;
 
-  // Loading overlay, then show screen 1
   const overlay = document.getElementById("overlay");
   const screen1 = document.getElementById("screen1");
   const screen2 = document.getElementById("screen2");
@@ -384,15 +378,15 @@
     showScreen(1);
   }, 1500);
 
-  // Raining hearts
+  // Background raining hearts
   const rain = document.getElementById("rain");
-  const hearts = ["💗","💖","💘","💞","💕","❤️","💓","💝"];
+  const heartChars = ["💗","💖","💘","💞","💕","❤️","💓","💝"];
   const isReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function addDrop(){
     const d = document.createElement("div");
     d.className = "drop";
-    d.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    d.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
     const left = Math.random() * 100;
     const size = 14 + Math.random() * 20;
     const dur = 4.8 + Math.random() * 7.2;
@@ -419,16 +413,15 @@
   const confChars = ["💖","💘","✨","🎉","💗","💕","❤️","🌸","⭐"];
   function burstConfetti(){
     confetti.classList.add("active");
-    const count = window.innerWidth < 520 ? 26 : 40;
+    const count = window.innerWidth < 520 ? 28 : 42;
 
     for (let i = 0; i < count; i++){
       const c = document.createElement("div");
       c.className = "conf";
       c.textContent = confChars[Math.floor(Math.random() * confChars.length)];
-
       const left = Math.random() * 100;
       const size = 14 + Math.random() * 24;
-      const dur = 2.8 + Math.random() * 1.6;
+      const dur = 2.7 + Math.random() * 1.8;
 
       c.style.left = left + "vw";
       c.style.fontSize = size + "px";
@@ -436,96 +429,52 @@
       c.style.opacity = (0.65 + Math.random() * 0.35).toFixed(2);
 
       confetti.appendChild(c);
-      setTimeout(() => c.remove(), (dur * 1000) + 200);
+      setTimeout(() => c.remove(), (dur * 1000) + 220);
+    }
+    setTimeout(() => confetti.classList.remove("active"), 3600);
+  }
+
+  // Toast
+  const toast = document.getElementById("toast");
+  function showToast(){
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3200);
+  }
+
+  // Heart flood effect
+  const heartFlood = document.getElementById("heartFlood");
+  function floodHearts(durationMs){
+    heartFlood.innerHTML = "";
+    heartFlood.classList.add("active");
+
+    const count = window.innerWidth < 520 ? 85 : 130;
+    const floodSet = ["💖","💘","💞","💕","❤️","💗","💝","✨"];
+
+    for (let i = 0; i < count; i++){
+      const h = document.createElement("div");
+      h.className = "floodHeart";
+      h.textContent = floodSet[Math.floor(Math.random() * floodSet.length)];
+
+      h.style.left = (Math.random() * 100) + "vw";
+      h.style.top = (Math.random() * 100) + "vh";
+      h.style.fontSize = (18 + Math.random() * 44) + "px";
+      h.style.animationDelay = (Math.random() * 0.45) + "s";
+
+      heartFlood.appendChild(h);
     }
 
-    setTimeout(() => confetti.classList.remove("active"), 3400);
+    setTimeout(() => {
+      heartFlood.classList.remove("active");
+      heartFlood.innerHTML = "";
+    }, durationMs);
   }
-
-  // Simple WebAudio sounds
-  let audioOn = false;
-  const audioToggle = document.getElementById("audioToggle");
-  let audioCtx = null;
-
-  function ensureAudio(){
-    if (audioCtx) return;
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!Ctx) return;
-    audioCtx = new Ctx();
-  }
-
-  function beep(type, freq, dur, gain){
-    if (!audioOn) return;
-    ensureAudio();
-    if (!audioCtx) return;
-
-    if (audioCtx.state === "suspended"){
-      audioCtx.resume().catch(()=>{});
-    }
-
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = type;
-    o.frequency.value = freq;
-
-    g.gain.value = 0;
-    o.connect(g);
-    g.connect(audioCtx.destination);
-
-    const now = audioCtx.currentTime;
-    g.gain.setValueAtTime(0.0001, now);
-    g.gain.exponentialRampToValueAtTime(gain, now + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
-
-    o.start(now);
-    o.stop(now + dur + 0.02);
-  }
-
-  function sfxYes(){
-    beep("sine", 660, 0.12, 0.12);
-    setTimeout(()=>beep("sine", 880, 0.14, 0.10), 90);
-  }
-  function sfxDodge(){
-    beep("square", 220, 0.07, 0.06);
-    setTimeout(()=>beep("square", 180, 0.08, 0.05), 60);
-  }
-  function sfxCatch(){
-    beep("triangle", 740, 0.12, 0.12);
-    setTimeout(()=>beep("triangle", 990, 0.15, 0.10), 90);
-    setTimeout(()=>beep("triangle", 1240, 0.18, 0.09), 180);
-  }
-  function sfxPick(){
-    beep("sine", 520, 0.10, 0.10);
-    setTimeout(()=>beep("sine", 660, 0.12, 0.09), 90);
-  }
-
-  audioToggle.addEventListener("click", () => {
-    audioOn = !audioOn;
-    audioToggle.textContent = audioOn ? "Sound: On" : "Sound: Off";
-    if (audioOn){
-      ensureAudio();
-      if (audioCtx && audioCtx.state === "suspended"){
-        audioCtx.resume().catch(()=>{});
-      }
-      beep("sine", 440, 0.06, 0.05);
-    }
-  });
-
-  // On phones, audio usually needs a user gesture
-  document.addEventListener("pointerdown", () => {
-    if (!audioOn) return;
-    ensureAudio();
-    if (audioCtx && audioCtx.state === "suspended"){
-      audioCtx.resume().catch(()=>{});
-    }
-  }, { once:true });
 
   // Buttons and egg
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const egg = document.getElementById("egg");
 
-  // YES grows as she chases NO
+  // Yes grows as she chases No
   let yesScale = 1;
   function growYes(){
     yesScale = Math.min(2.6, yesScale + 0.10);
@@ -533,7 +482,7 @@
     yesBtn.style.boxShadow = `0 18px 44px rgba(22,163,74,${Math.min(0.75, 0.25 + yesScale/6)})`;
   }
 
-  // NO jitter zone, stays near home
+  // No jitter zone
   let noHome = null;
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
   function setNoHomeIfNeeded(){
@@ -563,7 +512,6 @@
     noBtn.style.zIndex = "9997";
 
     growYes();
-    sfxDodge();
   }
   window.addEventListener("resize", () => { noHome = null; });
 
@@ -591,7 +539,7 @@
 
   noBtn.addEventListener("click", (e)=>{ e.preventDefault(); jitterNo(); });
 
-  // Egg attempts logic
+  // Egg attempts
   let eggDodges = 0;
   const maxDodges = 5;
   const eggAttemptsEl = document.getElementById("eggAttempts");
@@ -610,12 +558,8 @@
     const h = 60;
     const maxX = Math.max(pad, window.innerWidth - w - pad);
     const maxY = Math.max(pad, window.innerHeight - h - pad);
-
-    const x = Math.random() * (maxX - pad) + pad;
-    const y = Math.random() * (maxY - pad) + pad;
-
-    egg.style.left = x + "px";
-    egg.style.top = y + "px";
+    egg.style.left = (Math.random() * (maxX - pad) + pad) + "px";
+    egg.style.top  = (Math.random() * (maxY - pad) + pad) + "px";
   }
 
   function eggDodge(){
@@ -623,53 +567,34 @@
       eggDodges += 1;
       updateEggUI();
       moveEgg();
-      sfxDodge();
     }
   }
 
-  // YES click goes to egg game
+  // YES click -> flood hearts -> show page 2
   yesBtn.addEventListener("click", () => {
-    sfxYes();
-    showScreen(2);
-    eggDodges = 0;
-    eggReadyEl.style.display = "none";
-    updateEggUI();
-    egg.style.display = "block";
-    moveEgg();
+    floodHearts(1150);
+    setTimeout(() => {
+      showScreen(2);
+      eggDodges = 0;
+      eggReadyEl.style.display = "none";
+      updateEggUI();
+      egg.style.display = "block";
+      moveEgg();
+    }, 850);
   });
 
-  // Egg runs away for first 5 dodges, then becomes catchable
   egg.addEventListener("mouseenter", eggDodge);
-  egg.addEventListener("touchstart", (e)=>{
-    e.preventDefault();
-    eggDodge();
-  }, { passive:false });
+  egg.addEventListener("touchstart", (e)=>{ e.preventDefault(); eggDodge(); }, { passive:false });
 
   egg.addEventListener("click", () => {
-    // Only catchable after 5 dodges
     if (eggDodges < maxDodges){
       eggDodge();
       return;
     }
     egg.style.display = "none";
-    sfxCatch();
     burstConfetti();
+    showToast();
     showScreen(3);
-  });
-
-  // Date menu selection
-  const picked = document.getElementById("picked");
-  const pickedHint = document.getElementById("pickedHint");
-  document.getElementById("menu").addEventListener("click", (e) => {
-    const card = e.target.closest(".choice");
-    if (!card) return;
-
-    const choice = card.getAttribute("data-choice") || "A cute date";
-    picked.style.display = "inline-block";
-    pickedHint.style.display = "block";
-    picked.textContent = `Locked in: ${choice}. Pick up at 7 😌`;
-    sfxPick();
-    burstConfetti();
   });
 </script>
 
